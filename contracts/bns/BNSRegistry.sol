@@ -1,10 +1,10 @@
-// SPDX-License-Identifier: MIT
+/// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
 import "./BNS.sol";
 
 /**
- * The BNS registry contract.
+ * The BNS registry contract
  */
 contract BNSRegistry is BNS {
     struct Record {
