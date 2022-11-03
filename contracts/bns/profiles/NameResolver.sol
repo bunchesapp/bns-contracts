@@ -11,7 +11,7 @@ abstract contract NameResolver is INameResolver, ResolverBase {
      * Sets the name associated with an BNS node, for reverse records.
      * May only be called by the owner of that node in the BNS registry.
      * @param node The node to update.
-     *
+     */
     function setName(bytes32 node, string calldata newName)
         external
         virtual
