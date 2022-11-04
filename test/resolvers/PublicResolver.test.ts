@@ -4,20 +4,10 @@ import { ethers } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
-import { load } from 'dotenv';
-import { BADHINTS } from 'dns';
-import { resolvePath } from 'react-router-dom';
 const sha3 = utils.sha3;
-
-function getReverseNode(addr: string): string {
-  return namehash.hash(addr.slice(2).toLowerCase() + '.addr.reverse');
-}
 
 const ZERO_HASH =
   '0x0000000000000000000000000000000000000000000000000000000000000000';
-
-const ARBITRARY_HASH =
-  '0x4f5b812789fc606be1b3b16908db13fc7a9adf7ca72641f84d75b47069d3d7f0';
 
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -232,13 +222,13 @@ describe('PublicResolver.sol', async () => {
 
   context('name()', async () => {
     it('permits setting name by owner', async () => {
-      const { resolver, node, owner } = await loadFixture(deployPublicResolver);
+      const { resolver, node } = await loadFixture(deployPublicResolver);
       await resolver.setName(node, 'name1');
       expect(await resolver.name(node)).to.eql('name1');
     });
 
     it('can overwrite perviously set names', async () => {
-      const { resolver, node, owner } = await loadFixture(deployPublicResolver);
+      const { resolver, node } = await loadFixture(deployPublicResolver);
       await resolver.setName(node, 'name1');
       expect(await resolver.name(node)).to.eql('name1');
 
@@ -258,7 +248,7 @@ describe('PublicResolver.sol', async () => {
     });
 
     it('reset record on version change', async () => {
-      const { resolver, node, owner } = await loadFixture(deployPublicResolver);
+      const { resolver, node } = await loadFixture(deployPublicResolver);
       await resolver.setName(node, 'name1');
       expect(await resolver.name(node)).to.eql('name1');
 
@@ -471,7 +461,7 @@ describe('PublicResolver.sol', async () => {
 
       await resolver.connect(addr1).setApprovalForAll(addr2.address, true);
 
-      // The authorisation should have no effect, because accounts[1] is not the owner.
+      // The authorisation should have no effect, because addr1 is not the owner.
       await expect(resolver.connect(addr2).setName(node, 'name')).to.be
         .reverted;
     });
