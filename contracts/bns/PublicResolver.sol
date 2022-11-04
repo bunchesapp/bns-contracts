@@ -6,6 +6,7 @@ import "./profiles/AddrResolver.sol";
 import "./profiles/NameResolver.sol";
 import "./profiles/PubkeyResolver.sol";
 import "./profiles/TextResolver.sol";
+import "./profiles/Multicallable.sol";
 
 interface INameWrapper {
     function ownerOf(uint256 id) external view returns (address);
@@ -19,7 +20,8 @@ contract PublicResolver is
     AddrResolver,
     NameResolver,
     PubkeyResolver,
-    TextResolver
+    TextResolver,
+    Multicallable
 {
     BNS immutable bns;
     INameWrapper immutable nameWrapper;
@@ -94,7 +96,13 @@ contract PublicResolver is
     function supportsInterface(bytes4 interfaceID)
         public
         view
-        override(AddrResolver, NameResolver, PubkeyResolver, TextResolver)
+        override(
+            AddrResolver,
+            NameResolver,
+            PubkeyResolver,
+            TextResolver,
+            Multicallable
+        )
         returns (bool)
     {
         return super.supportsInterface(interfaceID);

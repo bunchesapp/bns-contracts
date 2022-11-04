@@ -4,8 +4,9 @@ import { ethers } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
-import { resolve } from 'path';
-import { Resolver } from 'dns';
+import { load } from 'dotenv';
+import { BADHINTS } from 'dns';
+import { resolvePath } from 'react-router-dom';
 const sha3 = utils.sha3;
 
 function getReverseNode(addr: string): string {
@@ -41,7 +42,16 @@ describe('PublicResolver.sol', async () => {
 
     await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), owner.address);
 
-    return { bns, resolver, node, owner, addr1, addr2, controller };
+    return {
+      bns,
+      resolver,
+      nameWrapper,
+      node,
+      owner,
+      addr1,
+      addr2,
+      controller,
+    };
   };
 
   context('fallback()', async () => {
@@ -360,6 +370,214 @@ describe('PublicResolver.sol', async () => {
       );
       expect(result[1]).to.eql(
         '0x0000000000000000000000000000000000000000000000000000000000000000',
+      );
+    });
+  });
+
+  context('text()', async () => {
+    const url = 'https://friends.bunches.xyz';
+    const url2 = 'https://careers.bunches.xyz';
+    const basicSetText = async () => {
+      const { resolver, node, owner, addr1, addr2 } = await loadFixture(
+        deployPublicResolver,
+      );
+      await resolver.setText(node, 'url', url);
+      expect(await resolver.text(node, 'url')).to.eql(url);
+
+      return { resolver, node, owner, addr1, addr2 };
+    };
+
+    it('permits setting text by owner', basicSetText);
+
+    it('can overwrite precious set text', async () => {
+      const { resolver, node } = await basicSetText();
+
+      await resolver.setText(node, 'url', url2);
+      expect(await resolver.text(node, 'url')).to.eql(url2);
+    });
+
+    it('can overwirte to same text', async () => {
+      const { resolver, node } = await basicSetText();
+
+      await resolver.setText(node, 'url', url);
+      expect(await resolver.text(node, 'url')).to.eql(url);
+    });
+
+    it('forids setting new text by non-owners', async () => {
+      const { resolver, node, addr1 } = await loadFixture(deployPublicResolver);
+
+      await expect(resolver.connect(addr1).setText(node, 'url', url)).to.be
+        .reverted;
+    });
+
+    it('forbids writing same text by non-owners', async () => {
+      const { resolver, node, addr1 } = await basicSetText();
+
+      await expect(resolver.connect(addr1).setText(node, 'url', url)).to.be
+        .reverted;
+    });
+
+    it('resets record on version change', async () => {
+      const { resolver, node } = await basicSetText();
+
+      await resolver.clearRecords(node);
+      expect(await resolver.text(node, 'url')).to.eql('');
+    });
+  });
+
+  context('authorisations', async () => {
+    it('permits authorisations to be set', async () => {
+      const { resolver, owner, addr1 } = await loadFixture(
+        deployPublicResolver,
+      );
+
+      await resolver.setApprovalForAll(addr1.address, true);
+      expect(await resolver.isApprovedForAll(owner.address, addr1.address)).to
+        .be.true;
+    });
+
+    it('permints authorised users to make changes', async () => {
+      const { bns, resolver, node, addr1 } = await loadFixture(
+        deployPublicResolver,
+      );
+
+      await resolver.setApprovalForAll(addr1.address, true);
+      expect(
+        await resolver.isApprovedForAll(await bns.owner(node), addr1.address),
+      ).to.be.true;
+
+      await resolver.connect(addr1).setName(node, 'name1');
+      expect(await resolver.name(node)).to.eql('name1');
+    });
+
+    it('permits authorisations to be cleared', async () => {
+      const { resolver, owner, addr1 } = await loadFixture(
+        deployPublicResolver,
+      );
+
+      await resolver.setApprovalForAll(addr1.address, true);
+      expect(await resolver.isApprovedForAll(owner.address, addr1.address)).to
+        .be.true;
+
+      await resolver.setApprovalForAll(addr1.address, false);
+      expect(await resolver.isApprovedForAll(owner.address, addr1.address)).to
+        .be.false;
+    });
+
+    it('permits non-owners to set authorisations', async () => {
+      const { resolver, node, addr1, addr2 } = await loadFixture(
+        deployPublicResolver,
+      );
+
+      await resolver.connect(addr1).setApprovalForAll(addr2.address, true);
+
+      // The authorisation should have no effect, because accounts[1] is not the owner.
+      await expect(resolver.connect(addr2).setName(node, 'name')).to.be
+        .reverted;
+    });
+
+    it('checks the authorisation for the current owner', async () => {
+      const { bns, resolver, node, addr1, addr2 } = await loadFixture(
+        deployPublicResolver,
+      );
+
+      await resolver.connect(addr1).setApprovalForAll(addr2.address, true);
+
+      await bns.setOwner(node, addr1.address);
+      await resolver.connect(addr2).setName(node, 'name');
+      expect(await resolver.name(node)).to.eql('name');
+    });
+
+    it('trusted contract can bypass authorisation', async () => {
+      const { resolver, node, controller } = await loadFixture(
+        deployPublicResolver,
+      );
+
+      await resolver.connect(controller).setName(node, 'name');
+      expect(await resolver.name(node)).to.eql('name');
+    });
+
+    it('emits an ApprovalForAll event', async () => {
+      const { resolver, owner, addr2 } = await loadFixture(
+        deployPublicResolver,
+      );
+
+      expect(await resolver.setApprovalForAll(addr2.address, true))
+        .to.emit(resolver, 'ApprovalForAll')
+        .withArgs(owner.address, addr2.address, true);
+    });
+
+    it('reverts if attempting to approve self as an operator', async () => {
+      const { resolver, addr1 } = await loadFixture(deployPublicResolver);
+
+      await expect(
+        resolver.connect(addr1).setApprovalForAll(addr1.address, true),
+      ).to.be.reverted;
+    });
+
+    it('permits name wrapper owner to make changes if owner is set to name wrapper address', async () => {
+      const { bns, resolver, nameWrapper, node, addr2 } = await loadFixture(
+        deployPublicResolver,
+      );
+      const owner = bns.owner(node);
+      const operator = addr2;
+
+      await expect(resolver.connect(operator).setName(node, 'name')).to.be
+        .reverted;
+
+      await bns.setOwner(node, nameWrapper.address);
+      expect(await resolver.connect(operator).setName(node, 'name'));
+    });
+  });
+
+  context('multicall', async () => {
+    it('allows setting multiple fields', async () => {
+      const { resolver, node } = await loadFixture(deployPublicResolver);
+      const ABI = [
+        'function setName(bytes32, string) external',
+        'function setText(bytes32, string, string) external',
+      ];
+      let iface = new ethers.utils.Interface(ABI);
+      const nameSet = iface.encodeFunctionData('setName', [node, 'name']);
+      const textSet = iface.encodeFunctionData('setText', [
+        node,
+        'url',
+        'https://friends.bunches.xyz',
+      ]);
+
+      expect(await resolver.multicall([nameSet, textSet]))
+        .to.emit(resolver, 'NameChanged')
+        .withArgs(node, 'name')
+        .to.emit(resolver, 'TextChanged')
+        .withArgs(node, 'url', 'url', 'https://friends.bunches.xyz');
+
+      expect(await resolver.name(node)).to.eql('name');
+      expect(await resolver.text(node, 'url')).to.eql(
+        'https://friends.bunches.xyz',
+      );
+    });
+
+    it('allows reading multiple fields', async () => {
+      const { resolver, node } = await loadFixture(deployPublicResolver);
+
+      await resolver.setName(node, 'myname');
+      await resolver.setText(node, 'url', 'https://friends.bunches.xyz');
+
+      const ABI = [
+        'function name(bytes32) external view returns (string)',
+        'function text(bytes32, string) external view returns (string)',
+      ];
+      let iface = new ethers.utils.Interface(ABI);
+      const name = iface.encodeFunctionData('name', [node]);
+      const text = iface.encodeFunctionData('text', [node, 'url']);
+
+      const results = await resolver.callStatic.multicall([name, text]);
+
+      expect(iface.decodeFunctionResult('name', results[0])[0]).to.eql(
+        'myname',
+      );
+      expect(iface.decodeFunctionResult('text', results[1])[0]).to.eql(
+        'https://friends.bunches.xyz',
       );
     });
   });
