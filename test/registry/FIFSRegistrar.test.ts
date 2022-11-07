@@ -29,7 +29,7 @@ describe('FIFSRegistrar.sol', async () => {
   it('should allow registration of names', async () => {
     const { bns, registrar, owner } = await loadFixture(deployFIFSRegistrar);
 
-    expect(await registrar.register(sha3('b'), owner.address))
+    await expect(registrar.register(sha3('b'), owner.address))
       .to.emit(bns, 'NewOwner')
       .withArgs(ZERO_HASH, sha3('b'), owner.address);
 
@@ -46,7 +46,7 @@ describe('FIFSRegistrar.sol', async () => {
 
       await registrar.register(sha3('b'), owner.address);
 
-      expect(await registrar.register(sha3('b'), addr1.address))
+      await expect(registrar.register(sha3('b'), addr1.address))
         .to.emit(bns, 'NewOwner')
         .withArgs(ZERO_HASH, sha3('b'), addr1.address);
 

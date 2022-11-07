@@ -100,7 +100,7 @@ describe('PublicResolver.sol', async () => {
       const { PublicResolver, resolver, node, addr1 } = await loadFixture(
         getResolverWithABI,
       );
-      expect(await PublicResolver.setAddr(node, addr1.address))
+      await expect(PublicResolver.setAddr(node, addr1.address))
         .to.emit(resolver, 'AddressChanged')
         .withArgs(node, addr1.address)
         .to.emit(resolver, 'AddrChanged')
@@ -210,7 +210,7 @@ describe('PublicResolver.sol', async () => {
       ];
       const PublicResolver = new ethers.Contract(resolver.address, abi, owner);
 
-      expect(await PublicResolver.setAddr(node, 60, addr1.address))
+      await expect(PublicResolver.setAddr(node, 60, addr1.address))
         .to.emit(resolver, 'AddressChanged')
         .withArgs(node, addr1.address)
         .to.emit(resolver, 'AddrChanged')
@@ -492,7 +492,7 @@ describe('PublicResolver.sol', async () => {
         deployPublicResolver,
       );
 
-      expect(await resolver.setApprovalForAll(addr2.address, true))
+      await expect(resolver.setApprovalForAll(addr2.address, true))
         .to.emit(resolver, 'ApprovalForAll')
         .withArgs(owner.address, addr2.address, true);
     });
@@ -535,7 +535,7 @@ describe('PublicResolver.sol', async () => {
         'https://friends.bunches.xyz',
       ]);
 
-      expect(await resolver.multicall([nameSet, textSet]))
+      await expect(resolver.multicall([nameSet, textSet]))
         .to.emit(resolver, 'NameChanged')
         .withArgs(node, 'name')
         .to.emit(resolver, 'TextChanged')
