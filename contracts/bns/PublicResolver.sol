@@ -7,6 +7,8 @@ import "./profiles/NameResolver.sol";
 import "./profiles/PubkeyResolver.sol";
 import "./profiles/TextResolver.sol";
 import "./profiles/Multicallable.sol";
+import "./profiles/ABIResolver.sol";
+import "./profiles/ContentHashResolver.sol";
 
 interface INameWrapper {
     function ownerOf(uint256 id) external view returns (address);
@@ -18,6 +20,8 @@ interface INameWrapper {
  */
 contract PublicResolver is
     AddrResolver,
+    ABIResolver,
+    ContentHashResolver,
     NameResolver,
     PubkeyResolver,
     TextResolver,
@@ -98,6 +102,8 @@ contract PublicResolver is
         view
         override(
             AddrResolver,
+            ABIResolver,
+            ContentHashResolver,
             NameResolver,
             PubkeyResolver,
             TextResolver,
