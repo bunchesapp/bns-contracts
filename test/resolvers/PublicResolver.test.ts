@@ -291,6 +291,68 @@ describe('PublicResolver.sol', async () => {
     });
   });
 
+  context('contenthash()', () => {
+    const basicSetContentHash = async () => {
+      const { resolver, node, addr2 } = await loadFixture(deployPublicResolver);
+      await resolver.setContenthash(
+        node,
+        '0x0000000000000000000000000000000000000000000000000000000000000001',
+      );
+      expect(await resolver.contenthash(node)).to.eql(
+        '0x0000000000000000000000000000000000000000000000000000000000000001',
+      );
+      return { resolver, node, addr2 };
+    };
+
+    it('allows setting contenthash by owner', basicSetContentHash);
+
+    it('can overwrite previouly set contenthash', async () => {
+      const { resolver, node } = await basicSetContentHash();
+      await resolver.setContenthash(
+        node,
+        '0x0000000000000000000000000000000000000000000000000000000000000002',
+      );
+      expect(await resolver.contenthash(node)).to.eql(
+        '0x0000000000000000000000000000000000000000000000000000000000000002',
+      );
+    });
+
+    it('forbids non-owners from setting contenthash', async () => {
+      const { resolver, node, addr2 } = await loadFixture(deployPublicResolver);
+      await expect(
+        resolver
+          .connect(addr2)
+          .setContenthash(
+            node,
+            '0x0000000000000000000000000000000000000000000000000000000000000001',
+          ),
+      ).to.be.reverted;
+    });
+
+    it('fobids non-owners from setting same contenthash', async () => {
+      const { resolver, node, addr2 } = await basicSetContentHash();
+      await expect(
+        resolver
+          .connect(addr2)
+          .setContenthash(
+            node,
+            '0x0000000000000000000000000000000000000000000000000000000000000001',
+          ),
+      ).to.be.reverted;
+    });
+
+    it('returns empty when fetching non-existent contenthash', async () => {
+      const { resolver, node } = await loadFixture(deployPublicResolver);
+      expect(await resolver.contenthash(node)).to.eql('0x');
+    });
+
+    it('resets record on version change', async () => {
+      const { resolver, node } = await basicSetContentHash();
+      await resolver.clearRecords(node);
+      expect(await resolver.contenthash(node)).to.eql('0x');
+    });
+  });
+
   context('name()', async () => {
     it('permits setting name by owner', async () => {
       const { resolver, node } = await loadFixture(deployPublicResolver);
