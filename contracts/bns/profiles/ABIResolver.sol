@@ -8,7 +8,7 @@ abstract contract ABIResolver is IABIResolver, ResolverBase {
     mapping(uint64 => mapping(bytes32 => mapping(uint256 => bytes))) versionable_abis;
 
     /**
-     * Sets the ABI associated with an ENS node.
+     * Sets the ABI associated with an BNS node.
      * Nodes may have one ABI of each content type. To remove an ABI, set it to
      * the empty string.
      * @param node The node to update.
@@ -20,7 +20,7 @@ abstract contract ABIResolver is IABIResolver, ResolverBase {
         uint256 contentType,
         bytes calldata data
     ) external virtual authorised(node) {
-        // Content types must be powers of 2
+        // Content types must be powers of https://stackoverflow.com/questions/600293/how-to-check-if-a-number-is-a-power-of-2
         require(((contentType - 1) & contentType) == 0);
 
         versionable_abis[recordVersions[node]][node][contentType] = data;
@@ -28,9 +28,9 @@ abstract contract ABIResolver is IABIResolver, ResolverBase {
     }
 
     /**
-     * Returns the ABI associated with an ENS node.
+     * Returns the ABI associated with an BNS node.
      * Defined in EIP205.
-     * @param node The ENS node to query
+     * @param node The BNS node to query
      * @param contentTypes A bitwise OR of the ABI formats accepted by the caller.
      * @return contentType The content type of the return value
      * @return data The ABI data

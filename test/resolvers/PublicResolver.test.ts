@@ -1,4 +1,7 @@
-import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
+import {
+  loadFixture,
+  setBlockGasLimit,
+} from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 
@@ -66,11 +69,13 @@ describe('PublicResolver.sol', async () => {
       expect(await resolver.supportsInterface('0x691f3431')).to.be.true; //INameresolver
       expect(await resolver.supportsInterface('0xc8690233')).to.be.true; //IPubkeyResolver
       expect(await resolver.supportsInterface('0x59d1d43c')).to.be.true; //ITextResolver
+      expect(await resolver.supportsInterface('0xbc1c58d1')).to.be.true; //IContentHashResolver
+      expect(await resolver.supportsInterface('0x2203ab56')).to.be.true; //IABIResolver
     });
 
     it('does NOT support a random interface', async () => {
       const { resolver } = await loadFixture(deployPublicResolver);
-      expect(await resolver.supportsInterface('0x3b3b57df')).to.be.false; //IAddrResolver
+      expect(await resolver.supportsInterface('0x3b3b57df')).to.be.false;
     });
   });
 
@@ -217,6 +222,72 @@ describe('PublicResolver.sol', async () => {
         .withArgs(node, addr1.address);
 
       expect(await PublicResolver.addr(node)).to.eql(addr1.address);
+    });
+  });
+
+  context('ABI()', () => {
+    const basicSetABI = async () => {
+      const { resolver, node, owner, addr1, addr2 } = await loadFixture(
+        deployPublicResolver,
+      );
+      await resolver.setABI(node, 0x1, '0x666f6f');
+      let result = await resolver.ABI(node, 0xffffffff);
+      expect(result[0].toNumber()).to.eql(1);
+      expect(result[1]).to.eql('0x666f6f');
+      return { resolver, node, owner, addr1, addr2 };
+    };
+
+    it('returns a contentType of 0 when nothing is available', async () => {
+      const { resolver, node } = await loadFixture(deployPublicResolver);
+      let result = await resolver.ABI(node, 0xffffffff);
+      expect(result[0].toNumber()).to.eql(0);
+    });
+
+    it('returns an ABI after it has been set', basicSetABI);
+
+    it('returns the first valid ABI', async () => {
+      const { resolver, node } = await loadFixture(deployPublicResolver);
+      await resolver.setABI(node, 0x2, '0x666f6f');
+      await resolver.setABI(node, 0x4, '0x626172');
+
+      let result = await resolver.ABI(node, 0x7);
+      expect(result[0].toNumber()).to.eql(2);
+      expect(result[1]).to.eql('0x666f6f');
+
+      result = await resolver.ABI(node, 0x5);
+      expect(result[0].toNumber()).to.eql(4);
+      expect(result[1]).to.eql('0x626172');
+    });
+
+    it('allows deleting ABIs', async () => {
+      const { resolver, node } = await loadFixture(deployPublicResolver);
+      await resolver.setABI(node, 0x1, '0x666f6f');
+      let result = await resolver.ABI(node, 0xffffffff);
+      expect(result[0].toNumber()).to.eql(1);
+      expect(result[1]).to.eql('0x666f6f');
+
+      await resolver.setABI(node, 0x1, '0x');
+      result = await resolver.ABI(node, 0xffffffff);
+      expect(result[0].toNumber()).to.eql(0);
+      expect(result[1]).to.eql('0x');
+    });
+
+    it('rejects invalid contentTypes', async () => {
+      const { resolver, node } = await loadFixture(deployPublicResolver);
+      await expect(resolver.setABI(node, 0x3, '0x12')).to.be.reverted;
+    });
+
+    it('forbids setting value by non-owners', async () => {
+      const { resolver, node, addr2 } = await loadFixture(deployPublicResolver);
+      await expect(resolver.connect(addr2).setABI(node, 0x2, '0x666f6f')).to.be
+        .reverted;
+    });
+
+    it('resets on change versions', async () => {
+      const { resolver, node } = await basicSetABI();
+      await resolver.clearRecords(node);
+      let result = await resolver.ABI(node, 0xffffffff);
+      expect(result[0].toNumber()).to.eql(0);
     });
   });
 
