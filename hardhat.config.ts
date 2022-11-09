@@ -7,7 +7,6 @@ import 'hardhat-abi-exporter';
 import 'hardhat-deploy';
 import 'hardhat-gas-reporter';
 import { HardhatUserConfig, task } from 'hardhat/config';
-import { promisify } from 'util';
 
 // Load environment variables from .env file. Suppress warnings using silent
 // if this file is missing. dotenv will never modify any environment variables
