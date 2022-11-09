@@ -15,7 +15,11 @@ interface IBaseRegistrar is IERC721 {
     /**
      * @dev Register a name.
      */
-    function register(uint256 id, address owner) external;
+    function register(
+        string calldata name,
+        address owner,
+        address resolver
+    ) external;
 
     /**
      * @dev Reclaim ownership of a name in ENS, if you own it in the registrar.

@@ -3,12 +3,15 @@ pragma solidity >=0.8.4;
 
 import "./BNS.sol";
 import "./IBaseRegistrar.sol";
+import "./ReverseRegistrar.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
     // The BNS registry
     BNS public bns;
+    // The Reverse Registrar
+    ReverseRegistrar public immutable reverseRegistrar;
     // The namehash of the TLD this registrar owns (eg, .eth)
     bytes32 public baseNode;
     bytes4 private constant INTERFACE_META_ID =
@@ -28,9 +31,14 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
     bytes4 private constant RECLAIM_ID =
         bytes4(keccak256("reclaim(uint256,address)"));
 
-    constructor(BNS _bns, bytes32 _baseNode) ERC721("", "") {
+    constructor(
+        BNS _bns,
+        bytes32 _baseNode,
+        ReverseRegistrar _reverseRegistrar
+    ) ERC721("", "") {
         bns = _bns;
         baseNode = _baseNode;
+        reverseRegistrar = _reverseRegistrar;
     }
 
     modifier live() {
@@ -45,30 +53,46 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
 
     /**
      * @dev Register a name.
-     * @param id The token ID (keccak256 of the label).
+     * @param name The label to be registered and used for ID (keccak256(name)).
      * @param owner The address that should own the registration.
+     * @param resolver The address of the resolver.
      */
-    function register(uint256 id, address owner) external override {
-        _register(id, owner, true);
+    function register(
+        string calldata name,
+        address owner,
+        address resolver
+    ) external override {
+        _register(name, owner, resolver, true, true);
     }
 
     /**
      * @dev Register a name, without modifying the registry.
-     * @param id The token ID (keccak256 of the label).
+     * @param name The label to be registered and used for ID (keccak256(name))
      * @param owner The address that should own the registration.
+     * @param resolver The address of the resolver.
      */
-    function registerOnly(uint256 id, address owner) external {
-        _register(id, owner, false);
+    function registerOnly(
+        string calldata name,
+        address owner,
+        address resolver
+    ) external {
+        _register(name, owner, resolver, false, false);
     }
 
     function _register(
-        uint256 id,
+        string memory name,
         address owner,
-        bool updateRegistry
+        address resolver,
+        bool updateRegistry,
+        bool reverseRecord
     ) internal live {
+        uint256 id = uint256(keccak256(abi.encodePacked(name)));
         _mint(owner, id);
         if (updateRegistry) {
             bns.setSubnodeOwner(baseNode, bytes32(id), owner);
+        }
+        if (reverseRecord) {
+            _setReverseRecord(name, resolver, msg.sender);
         }
 
         emit NameRegistered(id, owner);
@@ -80,6 +104,19 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
     function reclaim(uint256 id, address owner) external override live {
         require(_isApprovedOrOwner(msg.sender, id));
         bns.setSubnodeOwner(baseNode, bytes32(id), owner);
+    }
+
+    function _setReverseRecord(
+        string memory name,
+        address resolver,
+        address owner
+    ) internal {
+        reverseRegistrar.setNameForAddr(
+            msg.sender,
+            owner,
+            resolver,
+            string.concat(name, ".b")
+        );
     }
 
     function supportsInterface(bytes4 interfaceID)
