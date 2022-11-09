@@ -10,7 +10,6 @@ contract BNSRegistry is BNS {
     struct Record {
         address owner;
         address resolver;
-        uint64 ttl;
     }
 
     mapping(bytes32 => Record) records;
@@ -19,7 +18,10 @@ contract BNSRegistry is BNS {
     // Permits modifications only by the owner of the specified node.
     modifier authorised(bytes32 _node) {
         address nodeOwner = records[_node].owner;
-        require(nodeOwner == msg.sender || operators[nodeOwner][msg.sender]);
+        require(
+            nodeOwner == msg.sender || operators[nodeOwner][msg.sender],
+            "Not authorised"
+        );
         _;
     }
 
@@ -35,16 +37,14 @@ contract BNSRegistry is BNS {
      * @param _node The node to update.
      * @param _owner The address of the new owner.
      * @param _resolver The address of the resolver.
-     * @param _ttl The TTL in seconds.
      */
     function setRecord(
         bytes32 _node,
         address _owner,
-        address _resolver,
-        uint64 _ttl
+        address _resolver
     ) external virtual override {
         setOwner(_node, _owner);
-        _setResolverAndTTL(_node, _resolver, _ttl);
+        _setResolver(_node, _resolver);
     }
 
     /**
@@ -53,17 +53,15 @@ contract BNSRegistry is BNS {
      * @param _label The hash of the label specifying the subnode.
      * @param _owner The address of the new owner.
      * @param _resolver The address of the resolver.
-     * @param _ttl The TTL in seconds.
      */
     function setSubnodeRecord(
         bytes32 _node,
         bytes32 _label,
         address _owner,
-        address _resolver,
-        uint64 _ttl
+        address _resolver
     ) external virtual override {
         bytes32 subnode = setSubnodeOwner(_node, _label, _owner);
-        _setResolverAndTTL(subnode, _resolver, _ttl);
+        _setResolver(subnode, _resolver);
     }
 
     /**
@@ -111,21 +109,6 @@ contract BNSRegistry is BNS {
     {
         emit NewResolver(_node, _resolver);
         records[_node].resolver = _resolver;
-    }
-
-    /**
-     * @dev Sets the TTL for the specified node.
-     * @param _node The node to update.
-     * @param _ttl The TTL in seconds.
-     */
-    function setTTL(bytes32 _node, uint64 _ttl)
-        public
-        virtual
-        override
-        authorised(_node)
-    {
-        emit NewTTL(_node, _ttl);
-        records[_node].ttl = _ttl;
     }
 
     /**
@@ -179,15 +162,6 @@ contract BNSRegistry is BNS {
     }
 
     /**
-     * @dev Returns the TTL of a node, and any records associated with it.
-     * @param _node The specified node.
-     * @return ttl of the node.
-     */
-    function ttl(bytes32 _node) public view virtual override returns (uint64) {
-        return records[_node].ttl;
-    }
-
-    /**
      * @dev Returns whether a record has been imported to the registry.
      * @param _node The specified node.
      * @return Bool if record exists
@@ -222,19 +196,10 @@ contract BNSRegistry is BNS {
         records[_node].owner = _owner;
     }
 
-    function _setResolverAndTTL(
-        bytes32 _node,
-        address _resolver,
-        uint64 _ttl
-    ) internal {
+    function _setResolver(bytes32 _node, address _resolver) internal {
         if (_resolver != records[_node].resolver) {
             records[_node].resolver = _resolver;
             emit NewResolver(_node, _resolver);
-        }
-
-        if (_ttl != records[_node].ttl) {
-            records[_node].ttl = _ttl;
-            emit NewTTL(_node, _ttl);
         }
     }
 }

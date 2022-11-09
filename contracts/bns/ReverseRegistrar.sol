@@ -86,7 +86,7 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
             abi.encodePacked(ADDR_REVERSE_NODE, labelHash)
         );
         emit ReverseClaimed(addr, reverseNode);
-        bns.setSubnodeRecord(ADDR_REVERSE_NODE, labelHash, owner, resolver, 0);
+        bns.setSubnodeRecord(ADDR_REVERSE_NODE, labelHash, owner, resolver);
         return reverseNode;
     }
 

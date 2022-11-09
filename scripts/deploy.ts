@@ -22,8 +22,6 @@ async function main() {
   const BNSRegistry = await ethers.getContractFactory('BNSRegistry');
   const registry = await BNSRegistry.deploy();
 
-  console.log(`\nBNS Registry deployed at ${registry.address}`);
-
   console.log(`\nSetting owner as owner of root node...`);
   await registry.setOwner(ZERO_HASH, owner.address);
   console.log('\n✅ Success');
@@ -32,21 +30,10 @@ async function main() {
   console.log('Deploying Reverse Registrar...');
   const ReverseRegistrar = await ethers.getContractFactory('ReverseRegistrar');
   const reverseRegistrar = await ReverseRegistrar.deploy(registry.address);
-  console.log(`\nReverse Registrar deployed at: ${reverseRegistrar.address}`);
 
   console.log(
-    '\nSetting Reverse Registrar as owner of "reverse.addr" subnode...',
+    '\nSetting Reverse Registrar as owner of "addr.reverse" subnode...',
   );
-  await registry
-    .connect(owner)
-    .setSubnodeOwner(ZERO_HASH, sha3('reverse'), owner.address);
-  await registry
-    .connect(owner)
-    .setSubnodeOwner(
-      namehash.hash('reverse'),
-      sha3('addr'),
-      reverseRegistrar.address,
-    );
   console.log('\n✅ Success');
 
   console.log('\n=================Public Resolver==================');
@@ -58,16 +45,50 @@ async function main() {
     ZERO_ADDRESS,
     reverseRegistrar.address,
   );
-  console.log(`\nPublic Resolver deployed at: ${resolver.address}`);
 
   console.log(
     '\nSetting Public Resolver as defaultResolver for Reverse Registrar...',
   );
   await reverseRegistrar.setDefaultResolver(resolver.address);
+  await registry
+    .connect(owner)
+    .setSubnodeOwner(ZERO_HASH, sha3('reverse'), owner.address);
+  await registry
+    .connect(owner)
+    .setSubnodeRecord(
+      namehash.hash('reverse'),
+      sha3('addr'),
+      reverseRegistrar.address,
+      resolver.address,
+    );
   console.log('\n✅ Success');
 
+  console.log('\n===================.b Registrar===================\n');
+  console.log('\nDeploying .b Registrar ...');
+  const BNSRegistrar = await ethers.getContractFactory('BNSRegistrar');
+  const registrar = await BNSRegistrar.deploy(
+    registry.address,
+    namehash.hash('b'),
+  );
+
+  console.log('\nCreating new subnode for ".b"...');
+  await registry
+    .connect(owner)
+    .setSubnodeRecord(
+      ZERO_HASH,
+      sha3('b'),
+      registrar.address,
+      resolver.address,
+    );
+  console.log('\n✅ Success');
+
+  console.log('\n===================Deployments====================');
+  console.log(`\nBNS Registry deployed at: ${registry.address}`);
+  console.log(`\nReverse Registrar deployed at: ${reverseRegistrar.address}`);
+  console.log(`\nPublic Resolver deployed at: ${resolver.address}`);
+  console.log(`\n.b Registrar deployed at: ${registrar.address}`);
+
   console.log('\n==================================================\n');
-  // console.log('\n========================= =========================\n');
 }
 
 main()

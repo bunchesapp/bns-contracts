@@ -4,8 +4,9 @@ import { ethers } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
-import { endianness } from 'os';
 const sha3 = utils.sha3;
+
+const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 const ZERO_HASH =
   '0x0000000000000000000000000000000000000000000000000000000000000000';
@@ -19,7 +20,15 @@ describe('BNSRegistry.sol', async () => {
     const BNS = await ethers.getContractFactory('BNSRegistry');
     const bns = await BNS.deploy();
 
-    return { bns, owner, addr1, addr2, addr3 };
+    const Resolver = await ethers.getContractFactory('PublicResolver');
+    const resolver = await Resolver.deploy(
+      bns.address,
+      EMPTY_ADDRESS,
+      EMPTY_ADDRESS,
+      EMPTY_ADDRESS,
+    );
+
+    return { bns, resolver, owner, addr1, addr2, addr3 };
   };
 
   it('should allow ownership transfers', async () => {
@@ -52,21 +61,6 @@ describe('BNSRegistry.sol', async () => {
     await expect(bns.setResolver(ARBITRARY_HASH, addr1.address)).to.be.reverted;
   });
 
-  it('should allow setting the TTL', async () => {
-    const { bns } = await loadFixture(deployBNSRegistry);
-
-    await expect(bns.setTTL(ZERO_HASH, 3600))
-      .to.emit(bns, 'NewTTL')
-      .withArgs(ZERO_HASH, 3600);
-
-    expect((await bns.ttl(ZERO_HASH)).toNumber()).to.eql(3600);
-  });
-
-  it('should prevent setting the TTL by non-owners', async () => {
-    const { bns } = await loadFixture(deployBNSRegistry);
-    await expect(bns.setTTL(ARBITRARY_HASH, 3600)).to.be.reverted;
-  });
-
   it('should allow the creation of subnodes', async () => {
     const { bns, addr1 } = await loadFixture(deployBNSRegistry);
 
@@ -77,9 +71,66 @@ describe('BNSRegistry.sol', async () => {
     expect(await bns.owner(namehash.hash('b'))).to.eql(addr1.address);
   });
 
-  it('should progibit subnode creation by non-owners', async () => {
+  it('should prohibit subnode creation by non-owners', async () => {
     const { bns, addr1 } = await loadFixture(deployBNSRegistry);
     await expect(bns.setSubnodeOwner(ARBITRARY_HASH, sha3('b'), addr1.address))
       .to.be.reverted;
+  });
+
+  context('Records', () => {
+    it('should allow owner of node to create subnode records', async () => {
+      const { bns, resolver, owner } = await loadFixture(deployBNSRegistry);
+      await bns.setSubnodeRecord(
+        ZERO_HASH,
+        sha3('b'),
+        owner.address,
+        resolver.address,
+      );
+      console.log(resolver.address);
+      expect(await bns.owner(namehash.hash('b'))).to.eql(owner.address);
+      expect(await bns.resolver(namehash.hash('b'))).to.eql(resolver.address);
+    });
+
+    it('should allow owner of contract to set the record for an existing node', async () => {
+      const { bns, resolver, owner, addr1 } = await loadFixture(
+        deployBNSRegistry,
+      );
+      await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), owner.address);
+      expect(await bns.owner(namehash.hash('b'))).to.eql(owner.address);
+      expect(await bns.resolver(namehash.hash('b'))).to.eql(EMPTY_ADDRESS);
+
+      await bns.setRecord(namehash.hash('b'), addr1.address, resolver.address);
+      expect(await bns.owner(namehash.hash('b'))).to.eql(addr1.address);
+      expect(await bns.resolver(namehash.hash('b'))).to.eql(resolver.address);
+    });
+
+    it('forbids non-owners to create subnode records', async () => {
+      const { bns, resolver, owner, addr1 } = await loadFixture(
+        deployBNSRegistry,
+      );
+      await expect(
+        bns
+          .connect(addr1)
+          .setSubnodeRecord(
+            ZERO_HASH,
+            sha3('b'),
+            addr1.address,
+            resolver.address,
+          ),
+      ).to.be.reverted;
+    });
+
+    it('forbids non-owners to set records for existing node', async () => {
+      const { bns, resolver, owner, addr1 } = await loadFixture(
+        deployBNSRegistry,
+      );
+      await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), owner.address);
+
+      await expect(
+        bns
+          .connect(addr1)
+          .setRecord(namehash.hash('b'), addr1.address, resolver.address),
+      ).to.be.reverted;
+    });
   });
 });
