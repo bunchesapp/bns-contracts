@@ -86,7 +86,6 @@ describe('BNSRegistry.sol', async () => {
         owner.address,
         resolver.address,
       );
-      console.log(resolver.address);
       expect(await bns.owner(namehash.hash('b'))).to.eql(owner.address);
       expect(await bns.resolver(namehash.hash('b'))).to.eql(resolver.address);
     });

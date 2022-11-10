@@ -55,7 +55,7 @@ describe('BNSRegistrar.sol', () => {
     const { bns, registrar, resolver, owner, addr1 } = await loadFixture(
       deployBNSRegistrar,
     );
-    await registrar.register('testname', addr1.address, resolver.address);
+    await registrar.register('testname', addr1.address, [], resolver.address);
 
     expect(await bns.owner(namehash.hash('testname.b'))).to.eql(addr1.address);
     expect(await registrar.ownerOf(sha3('testname'))).to.eql(addr1.address);
@@ -65,19 +65,55 @@ describe('BNSRegistrar.sol', () => {
     const { bns, registrar, owner, resolver, addr1 } = await loadFixture(
       deployBNSRegistrar,
     );
-    await registrar.registerOnly('testname', addr1.address, resolver.address);
+    await registrar.registerOnly(
+      'testname',
+      addr1.address,
+      [],
+      resolver.address,
+    );
 
     expect(await bns.owner(namehash.hash('testname.b'))).to.eql(ZERO_ADDRESS);
     expect(await registrar.ownerOf(sha3('testname'))).to.eql(addr1.address);
+  });
+
+  it('should allow registrations with data to update multiple Resolver Records', async () => {
+    const { bns, registrar, owner, resolver, addr1 } = await loadFixture(
+      deployBNSRegistrar,
+    );
+    const node = namehash.hash('testname.b');
+    const label = 'testname';
+    const ABI = [
+      'function setAddr(bytes32, address) external',
+      'function setText(bytes32, string, string) external',
+    ];
+    let iface = new ethers.utils.Interface(ABI);
+    const addrSet = iface.encodeFunctionData('setAddr', [node, addr1.address]);
+    const textSet = iface.encodeFunctionData('setText', [
+      node,
+      'url',
+      'https://friends.bunches.xyz',
+    ]);
+
+    await resolver.connect(addr1).setApprovalForAll(registrar.address, true);
+    await registrar
+      .connect(addr1)
+      .register(label, addr1.address, [addrSet, textSet], resolver.address);
+
+    expect(await bns.owner(node)).to.eql(addr1.address);
+    expect(await resolver['addr(bytes32)'](node)).to.eql(addr1.address);
+    expect(await resolver.text(node, 'url')).to.eql(
+      'https://friends.bunches.xyz',
+    );
   });
 
   it('forbids registration of a name already registered', async () => {
     const { bns, registrar, resolver, owner, addr1, addr3 } = await loadFixture(
       deployBNSRegistrar,
     );
-    await registrar.register('newname', addr3.address, resolver.address);
-    await expect(registrar.register('newname', addr1.address, resolver.address))
-      .to.be.reverted;
+    await registrar.register('newname', addr3.address, [], resolver.address);
+    await expect(
+      registrar.register('newname', addr1.address, [], resolver.address),
+    ).to.be.reverted;
     expect(await registrar.ownerOf(sha3('newname'))).to.eql(addr3.address);
   });
 
@@ -85,7 +121,7 @@ describe('BNSRegistrar.sol', () => {
     const { bns, registrar, resolver, owner, addr2, addr3 } = await loadFixture(
       deployBNSRegistrar,
     );
-    await registrar.register('newname', addr2.address, resolver.address);
+    await registrar.register('newname', addr2.address, [], resolver.address);
     expect(await bns.owner(namehash.hash('newname.b'))).to.eql(addr2.address);
     await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), owner.address);
     await bns.setSubnodeOwner(
@@ -104,7 +140,7 @@ describe('BNSRegistrar.sol', () => {
     const { bns, registrar, resolver, owner, addr2, addr3 } = await loadFixture(
       deployBNSRegistrar,
     );
-    await registrar.register('newname', addr2.address, resolver.address);
+    await registrar.register('newname', addr2.address, [], resolver.address);
     await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), owner.address);
     await bns.setSubnodeOwner(
       namehash.hash('b'),
@@ -121,7 +157,7 @@ describe('BNSRegistrar.sol', () => {
     const { bns, registrar, resolver, owner, addr1, addr3 } = await loadFixture(
       deployBNSRegistrar,
     );
-    await registrar.register('newname', addr1.address, resolver.address);
+    await registrar.register('newname', addr1.address, [], resolver.address);
     expect(await bns.owner(namehash.hash('newname.b'))).to.eql(addr1.address);
     await registrar
       .connect(addr1)
@@ -138,7 +174,7 @@ describe('BNSRegistrar.sol', () => {
     const { bns, registrar, resolver, owner, addr1, addr3 } = await loadFixture(
       deployBNSRegistrar,
     );
-    await registrar.register('newname', addr1.address, resolver.address);
+    await registrar.register('newname', addr1.address, [], resolver.address);
     await expect(
       registrar
         .connect(addr3)

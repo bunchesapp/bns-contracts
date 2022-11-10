@@ -108,7 +108,7 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
             bns.setSubnodeOwner(baseNode, bytes32(id), owner);
         }
         if (data.length > 0) {
-            _setRecords(resolver, name, data);
+            _setRecords(resolver, keccak256(bytes(name)), data);
         }
         if (reverseRecord) {
             _setReverseRecord(name, resolver, msg.sender);
@@ -133,7 +133,7 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
      */
     function _setRecords(
         address resolverAddress,
-        string calldata label,
+        bytes32 label,
         bytes[] calldata data
     ) internal {
         bytes32 nodehash = keccak256(abi.encodePacked(baseNode, label));

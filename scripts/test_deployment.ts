@@ -20,7 +20,7 @@ async function main() {
   console.log('\nRegistering jacobvs on .b Registrar...');
   await registrar
     .connect(jacobvs)
-    .register('jacobvs', jacobvs.address, resolver.address);
+    .register('jacobvs', jacobvs.address, [], resolver.address);
   await resolver
     .connect(jacobvs)
     ['setAddr(bytes32,address)'](namehash.hash('jacobvs.b'), jacobvs.address);

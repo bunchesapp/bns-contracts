@@ -21,7 +21,7 @@ abstract contract Multicallable is IMulticallable, ERC165 {
             (bool success, bytes memory result) = address(this).delegatecall(
                 data[i]
             );
-            require(success);
+            require(success, "delegatecall failed");
             results[i] = result;
         }
         return results;
