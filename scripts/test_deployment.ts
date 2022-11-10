@@ -1,6 +1,7 @@
 import { ethers } from 'hardhat';
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
+import { resolveObjectURL } from 'buffer';
 const sha3 = utils.sha3;
 
 const ZERO_HASH =
@@ -9,12 +10,10 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 async function main() {
   const [deployer, owner, jacobvs, tome] = await ethers.getSigners();
-  const { bns, reverse, resolver, registrar } = await getBNSContracts();
+  const { bns, resolver, registrar } = await getBNSContracts();
 
   console.log('\n==================Testing Deployment==================');
-  console.log(
-    `\nTesting with accounts\n\njacobvs: ${jacobvs.address}\n\ntome: ${tome.address}`,
-  );
+  console.log(`\nTesting with accounts\n\njacobvs: ${jacobvs.address}`);
 
   console.log('\n=======================jacobvs========================');
 
@@ -22,6 +21,12 @@ async function main() {
   await registrar
     .connect(jacobvs)
     .register('jacobvs', jacobvs.address, resolver.address);
+  await resolver
+    .connect(jacobvs)
+    ['setAddr(bytes32,address)'](namehash.hash('jacobvs.b'), jacobvs.address);
+  await resolver
+    .connect(jacobvs)
+    .setName(namehash.hash('jacobvs.b'), 'jacobvs.b');
 
   console.log(
     `\nBalance of ${jacobvs.address}: ${await registrar.balanceOf(
@@ -49,10 +54,23 @@ async function main() {
     `\nOwner of reverse node for jacobvs.b \n${await bns.owner(reverseNode)}`,
   );
   console.log(
-    `\nPublic resolver gives back *${await resolver.name(
+    `\nPublic resolver name() for reverseNode gives back\n${await resolver.name(
       reverseNode,
-    )}* for reverseNode`,
+    )}`,
   );
+
+  console.log(
+    `\nPublic Resolver addr() for jacobvs.b node gives back:\n${await resolver[
+      'addr(bytes32)'
+    ](namehash.hash('jacobvs.b'))}`,
+  );
+  console.log(
+    `\nPublic Resolver name() for jacobvs.b node gives back:\n${await resolver.name(
+      namehash.hash('jacobvs.b'),
+    )}`,
+  );
+
+  console.log('\n==========================tome========================\n');
 
   console.log('\n======================================================\n');
 }
