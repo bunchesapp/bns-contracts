@@ -57,7 +57,7 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
      * @dev Register a name.
      * @param name The label to be registered and used for ID (keccak256(name)).
      * @param owner The address that should own the registration.
-     * @param data used for multicall on public resolver to set records
+     * @param data encoded function data used for multicall on public resolver to set records
      * @param resolver The address of the resolver.
      */
     function register(
@@ -73,7 +73,7 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
      * @dev Register a name, without modifying the registry.
      * @param name The label to be registered and used for ID (keccak256(name))
      * @param owner The address that should own the registration.
-     * @param data used for multicall on public resolver to set records
+     * @param data encoded function data used for multicall on public resolver to set records
      * @param resolver The address of the resolver.
      */
     function registerOnly(
@@ -85,6 +85,15 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
         _register(name, owner, data, resolver, false, false);
     }
 
+    /**
+     * @dev Register a name, .
+     * @param name The label to be registered and used for ID (keccak256(name))
+     * @param owner The address that should own the registration.
+     * @param data encoded function data used for multicall on public resolver to set records
+     * @param resolver The address of the resolver.
+     * @param updateRegistry if true, will change owner of bytes32(id) node on BNS Registry
+     * @param reverseRecord if true, will register a node for msg.sender on Reverse Registry
+     */
     function _register(
         string calldata name,
         address owner,
@@ -116,6 +125,12 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
         bns.setSubnodeOwner(baseNode, bytes32(id), owner);
     }
 
+    /**
+     * @dev updates record on the Public Resolver for the BNS node of label
+     * @param resolverAddress address of the Public resolver
+     * @param label label for updating the BNS Registry node
+     * @param data encoded function data for setting multiple records
+     */
     function _setRecords(
         address resolverAddress,
         string calldata label,
@@ -126,8 +141,14 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
         resolver.multicallWithNodeCheck(nodehash, data);
     }
 
+    /**
+     * @dev registers name on Reverse Registrar and updates Public Resolver
+     * @param label label to be registered on Reverse Registry and Public Resolver
+     * @param resolver address for Public Resolver
+     * @param owner address to own the label that is being registered
+     */
     function _setReverseRecord(
-        string memory name,
+        string memory label,
         address resolver,
         address owner
     ) internal {
@@ -135,7 +156,7 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
             msg.sender,
             owner,
             resolver,
-            string.concat(name, ".b")
+            string.concat(label, ".b")
         );
     }
 
