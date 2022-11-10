@@ -4,6 +4,7 @@ pragma solidity >=0.8.4;
 import "./BNS.sol";
 import "./IBaseRegistrar.sol";
 import "./ReverseRegistrar.sol";
+import {PublicResolver} from "./PublicResolver.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -12,7 +13,8 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
     BNS public bns;
     // The Reverse Registrar
     ReverseRegistrar public immutable reverseRegistrar;
-    // The namehash of the TLD this registrar owns (eg, .eth)
+
+    // The namehash of the TLD this registrar owns (eg, .b)
     bytes32 public baseNode;
     bytes4 private constant INTERFACE_META_ID =
         bytes4(keccak256("supportsInterface(bytes4)"));
@@ -55,33 +57,38 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
      * @dev Register a name.
      * @param name The label to be registered and used for ID (keccak256(name)).
      * @param owner The address that should own the registration.
+     * @param data used for multicall on public resolver to set records
      * @param resolver The address of the resolver.
      */
     function register(
         string calldata name,
         address owner,
+        bytes[] calldata data,
         address resolver
     ) external override {
-        _register(name, owner, resolver, true, true);
+        _register(name, owner, data, resolver, true, true);
     }
 
     /**
      * @dev Register a name, without modifying the registry.
      * @param name The label to be registered and used for ID (keccak256(name))
      * @param owner The address that should own the registration.
+     * @param data used for multicall on public resolver to set records
      * @param resolver The address of the resolver.
      */
     function registerOnly(
         string calldata name,
         address owner,
+        bytes[] calldata data,
         address resolver
     ) external {
-        _register(name, owner, resolver, false, false);
+        _register(name, owner, data, resolver, false, false);
     }
 
     function _register(
-        string memory name,
+        string calldata name,
         address owner,
+        bytes[] calldata data,
         address resolver,
         bool updateRegistry,
         bool reverseRecord
@@ -90,6 +97,9 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
         _mint(owner, id);
         if (updateRegistry) {
             bns.setSubnodeOwner(baseNode, bytes32(id), owner);
+        }
+        if (data.length > 0) {
+            _setRecords(resolver, name, data);
         }
         if (reverseRecord) {
             _setReverseRecord(name, resolver, msg.sender);
@@ -104,6 +114,16 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
     function reclaim(uint256 id, address owner) external override live {
         require(_isApprovedOrOwner(msg.sender, id));
         bns.setSubnodeOwner(baseNode, bytes32(id), owner);
+    }
+
+    function _setRecords(
+        address resolverAddress,
+        string calldata label,
+        bytes[] calldata data
+    ) internal {
+        bytes32 nodehash = keccak256(abi.encodePacked(baseNode, label));
+        PublicResolver resolver = PublicResolver(resolverAddress);
+        resolver.multicallWithNodeCheck(nodehash, data);
     }
 
     function _setReverseRecord(
