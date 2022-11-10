@@ -72,6 +72,62 @@ async function main() {
 
   console.log('\n==========================tome========================\n');
 
+  console.log('\nRegistering tome on .b Registrar...');
+  const node = namehash.hash('tome.b');
+  const ABI = [
+    'function setAddr(bytes32, address) external',
+    'function setText(bytes32, string, string) external',
+  ];
+  let iface = new ethers.utils.Interface(ABI);
+  const addrSet = iface.encodeFunctionData('setAddr', [node, tome.address]);
+  const textSet = iface.encodeFunctionData('setText', [
+    node,
+    'url',
+    'https://friends.bunches.xyz',
+  ]);
+  await resolver.connect(tome).setApprovalForAll(registrar.address, true);
+  await registrar
+    .connect(tome)
+    .register('tome', tome.address, [addrSet, textSet], resolver.address);
+
+  console.log(
+    `\nBalance of ${tome.address}: ${await registrar.balanceOf(tome.address)}`,
+  );
+  console.log(`\nToken ID \n${sha3('tome')}`);
+  console.log(`\nOwner of Token ID \n${await registrar.ownerOf(sha3('tome'))}`);
+  console.log(
+    `\nOwner of tome.b node on BNS Registry\n${await bns.owner(
+      namehash.hash('tome.b'),
+    )}`,
+  );
+  console.log(
+    `\ntome.b resolver address: ${await bns.resolver(namehash.hash('b'))}`,
+  );
+
+  reverseNode = namehash.hash(
+    '90F79bf6EB2c4f870365E785982E1f101E93b906.addr.reverse',
+  );
+  console.log(
+    `\nOwner of reverse node for tome.b \n${await bns.owner(reverseNode)}`,
+  );
+  console.log(
+    `\nPublic resolver name() for reverseNode gives back\n${await resolver.name(
+      reverseNode,
+    )}`,
+  );
+
+  console.log(
+    `\nPublic Resolver addr() for tome.b node gives back:\n${await resolver[
+      'addr(bytes32)'
+    ](namehash.hash('tome.b'))}`,
+  );
+  console.log(
+    `\nPublic Resolver text() for tome.b node gives back:\n${await resolver.text(
+      namehash.hash('tome.b'),
+      'url',
+    )}`,
+  );
+
   console.log('\n======================================================\n');
 }
 
