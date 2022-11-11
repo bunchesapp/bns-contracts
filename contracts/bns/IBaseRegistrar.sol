@@ -18,6 +18,7 @@ interface IBaseRegistrar is IERC721 {
     function register(
         string calldata name,
         address owner,
+        bytes[] calldata data,
         address resolver
     ) external;
 
