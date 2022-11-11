@@ -16,11 +16,11 @@ contract BNSRegistry is BNS {
     mapping(address => mapping(address => bool)) operators;
 
     // Permits modifications only by the owner of the specified node.
-    modifier authorised(bytes32 _node) {
+    modifier authorized(bytes32 _node) {
         address nodeOwner = records[_node].owner;
         require(
             nodeOwner == msg.sender || operators[nodeOwner][msg.sender],
-            "Not authorised"
+            "Not authorized"
         );
         _;
     }
@@ -73,7 +73,7 @@ contract BNSRegistry is BNS {
         public
         virtual
         override
-        authorised(_node)
+        authorized(_node)
     {
         _setOwner(_node, _owner);
         emit Transfer(_node, _owner);
@@ -89,7 +89,7 @@ contract BNSRegistry is BNS {
         bytes32 _node,
         bytes32 _label,
         address _owner
-    ) public virtual override authorised(_node) returns (bytes32) {
+    ) public virtual override authorized(_node) returns (bytes32) {
         bytes32 subnode = keccak256(abi.encodePacked(_node, _label));
         _setOwner(subnode, _owner);
         emit NewOwner(_node, _label, _owner);
@@ -105,7 +105,7 @@ contract BNSRegistry is BNS {
         public
         virtual
         override
-        authorised(_node)
+        authorized(_node)
     {
         emit NewResolver(_node, _resolver);
         records[_node].resolver = _resolver;
