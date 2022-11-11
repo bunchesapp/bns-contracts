@@ -14,7 +14,7 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
     // The Reverse Registrar
     ReverseRegistrar public immutable reverseRegistrar;
 
-    // The namehash of the TLD this registrar owns (eg, .b)
+    // The namehash of the TLD this registrar owns (eg, .b), set upon construction
     bytes32 public baseNode;
     bytes4 private constant INTERFACE_META_ID =
         bytes4(keccak256("supportsInterface(bytes4)"));

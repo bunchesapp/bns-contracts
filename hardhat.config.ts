@@ -2,6 +2,7 @@ import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-solhint';
 import '@nomiclabs/hardhat-truffle5';
 import '@nomiclabs/hardhat-waffle';
+import '@nomiclabs/hardhat-etherscan';
 import dotenv from 'dotenv';
 import 'hardhat-abi-exporter';
 import 'hardhat-deploy';
