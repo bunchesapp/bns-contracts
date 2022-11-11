@@ -12,7 +12,7 @@ import { HardhatUserConfig, task } from 'hardhat/config';
 // if this file is missing. dotenv will never modify any environment variables
 // that have already been set.
 // https://github.com/motdotla/dotenv
-dotenv.config({ debug: false });
+dotenv.config();
 
 task('accounts', 'Prints the list of accounts', async (_, hre) => {
   const accounts = await hre.ethers.getSigners();
@@ -40,12 +40,6 @@ const config: HardhatUserConfig = {
       url: 'http://127.0.0.1:8545',
       saveDeployments: false,
       tags: ['test', 'legacy', 'use_root'],
-    },
-    ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}`,
-      tags: ['test', 'legacy', 'use_root'],
-      chainId: 3,
-      accounts: real_accounts,
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_ID}`,
