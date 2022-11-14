@@ -61,8 +61,42 @@ yarn build
 yarn test
 ```
 
-### How deploy
+### Local Deployment with sample registration
 
+Spin up a local blockchain:
+
+```terminal 1
+yarn hardhat node
 ```
-yarn deploy --network <NETWORK_NAME>
+
+In a second terminal, run the deploy script locally:
+
+```terminal 2
+yarn deploy:local
 ```
+
+After deployment, get the addresses for each contract.
+Open up `scripts/test_deployment.ts` and change the address for each contract at the top.
+Then in the second terminal run:
+
+```terminal 2
+yarn hardhat run scripts/test_deployment.ts --network localhost
+```
+
+### Registering a Name
+
+For reference, check out the `test_deployment.ts` script for an example.
+
+After deploying all the contracts on the network, here is the registration process:
+
+- Call `setApprovalForAll` on the Public Resolver, to true for the BNS Registrar
+- Call `register` on the BNS Registrar
+  > Note:
+  > if you want to set records on the Public Resolver, put the encoded function data in an array for the `data` param.
+
+Under the hood this will:
+
+- create a new nodehash on the BNS registry for `<NAME>.b`
+- mint a token with id of `keccak256(<NAME>)` on the BNS Registry
+- register a reverse nodehash on the BNS registry for the address you registered from
+- add any records on the Public Resolver that you put in the `data` array of `register()`

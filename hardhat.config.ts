@@ -13,7 +13,7 @@ import { HardhatUserConfig, task } from 'hardhat/config';
 // if this file is missing. dotenv will never modify any environment variables
 // that have already been set.
 // https://github.com/motdotla/dotenv
-dotenv.config({ debug: false });
+dotenv.config();
 
 task('accounts', 'Prints the list of accounts', async (_, hre) => {
   const accounts = await hre.ethers.getSigners();
