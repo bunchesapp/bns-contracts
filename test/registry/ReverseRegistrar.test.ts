@@ -4,7 +4,6 @@ import { ethers } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
-import { BADHINTS } from 'dns';
 const sha3 = utils.sha3;
 
 function getReverseNode(addr: string): string {
@@ -331,3 +330,4 @@ describe('ReverseRegistrar.sol', () => {
     });
   });
 });
+ 

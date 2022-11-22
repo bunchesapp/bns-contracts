@@ -25,6 +25,7 @@ async function main() {
   console.log(`\nSetting owner as owner of root node...`);
   await registry.setOwner(ZERO_HASH, owner.address);
   console.log('\n✅ Success');
+  console.log(`\nBNS Registry deployed at: ${registry.address}`);
 
   console.log('\n===================Reverse Resolver===================\n');
   console.log('Deploying Reverse Registrar...');
@@ -35,6 +36,7 @@ async function main() {
     '\nSetting Reverse Registrar as owner of "addr.reverse" subnode...',
   );
   console.log('\n✅ Success');
+  console.log(`\nReverse Registrar deployed at: ${reverseRegistrar.address}`);
 
   console.log('\n===================Public Resolver====================');
   console.log('\nDeploying Public Resolver...');
@@ -62,6 +64,7 @@ async function main() {
       resolver.address,
     );
   console.log('\n✅ Success');
+  console.log(`\nPublic Resolver deployed at: ${resolver.address}`);
 
   console.log('\n=====================.b Registrar=====================\n');
   console.log('\nDeploying .b Registrar ...');
@@ -86,6 +89,7 @@ async function main() {
   await reverseRegistrar.setController(registrar.address, true);
 
   console.log('\n✅ Success');
+  console.log(`\n.b Registrar deployed at: ${registrar.address}`);
 
   console.log('\n=====================Deployments======================');
   console.log(`\nBNS Registry deployed at: ${registry.address}`);
