@@ -1,7 +1,7 @@
 {
   "name": "@ensdomains/ens-contracts",
   "version": "0.0.13",
-  "description": "ENS contracts",
+  "description": "BNS contracts",
   "scripts": {
     "build": "rm -rf ./build/deploy ./build/hardhat.config.js && hardhat compile && tsc",
     "deploy": "hardhat run scripts/deploy.ts",
@@ -9,7 +9,7 @@
     "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
     "lint": "hardhat check",
     "test": "hardhat test",
-    "test:local": "hardhat --network localhost test",
+    "test:local": "hardhat --network localhost",
     "verify:main": "hardhar verify --network mainnet",
     "verify:testnet": "hardhat verify --network goerli"
   },

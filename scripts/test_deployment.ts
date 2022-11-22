@@ -8,72 +8,72 @@ const ZERO_HASH =
   '0x0000000000000000000000000000000000000000000000000000000000000000';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-const bnsAddress = '0x13002BFcEF6945Ac2951514B0d42f63288Ad0b89';
-const reverseAddress = '0x02bF7eF09ac3EeDC81fEFda181aC886ce39C6556';
-const resolverAddress = '0x895DCc0f77fb3eb6D080Fc74c8671C53bfAC2c23';
-const registrarAddress = '0x84DF746d77bd8FB09c6b57d0905A9c21fc970726';
+const bnsAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const reverseAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+const resolverAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9';
+const registrarAddress = '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707';
 
 async function main() {
-  const [deployer, owner, tome] = await ethers.getSigners();
+  const [deployer, owner, jacobvs, tome] = await ethers.getSigners();
   const { bns, resolver, registrar } = await getBNSContracts();
 
   console.log('\n==================Testing Deployment==================');
-  console.log(`\nTesting with accounts\n\tome: ${tome.address}`);
+  console.log(`\nTesting with accounts\ntome: ${tome.address}`);
 
-  // console.log('\n=======================jacobvs========================');
+  console.log('\n=======================jacobvs========================');
 
-  // console.log('\nRegistering jacobvs on .b Registrar...');
-  // await registrar
-  //   .connect(jacobvs)
-  //   .register('jacobvs', jacobvs.address, [], resolver.address);
-  // await resolver
-  //   .connect(jacobvs)
-  //   ['setAddr(bytes32,address)'](namehash.hash('jacobvs.b'), jacobvs.address);
-  // await resolver
-  //   .connect(jacobvs)
-  //   .setName(namehash.hash('jacobvs.b'), 'jacobvs.b');
+  console.log('\nRegistering jacobvs on .b Registrar...');
+  await registrar
+    .connect(jacobvs)
+    .register('jacobvs', jacobvs.address, [], resolver.address);
+  await resolver
+    .connect(jacobvs)
+    ['setAddr(bytes32,address)'](namehash.hash('jacobvs.b'), jacobvs.address);
+  await resolver
+    .connect(jacobvs)
+    .setName(namehash.hash('jacobvs.b'), 'jacobvs.b');
 
-  // console.log(
-  //   `\nBalance of ${jacobvs.address}: ${await registrar.balanceOf(
-  //     jacobvs.address,
-  //   )}`,
-  // );
+  console.log(
+    `\nBalance of ${jacobvs.address}: ${await registrar.balanceOf(
+      jacobvs.address,
+    )}`,
+  );
 
-  // console.log(`\nToken ID \n${sha3('jacobvs')}`);
-  // console.log(
-  //   `\nOwner of Token ID \n${await registrar.ownerOf(sha3('jacobvs'))}`,
-  // );
-  // console.log(
-  //   `\nOwner of jacobvs.b node on BNS Registry\n${await bns.owner(
-  //     namehash.hash('jacobvs.b'),
-  //   )}`,
-  // );
-  // console.log(
-  //   `\njacobvs.b resolver address: ${await bns.resolver(namehash.hash('b'))}`,
-  // );
+  console.log(`\nToken ID \n${sha3('jacobvs')}`);
+  console.log(
+    `\nOwner of Token ID \n${await registrar.ownerOf(sha3('jacobvs'))}`,
+  );
+  console.log(
+    `\nOwner of jacobvs.b node on BNS Registry\n${await bns.owner(
+      namehash.hash('jacobvs.b'),
+    )}`,
+  );
+  console.log(
+    `\njacobvs.b resolver address: ${await bns.resolver(namehash.hash('b'))}`,
+  );
 
-  // let reverseNode = namehash.hash(
-  //   '3C44CdDdB6a900fa2b585dd299e03d12FA4293BC.addr.reverse',
-  // );
-  // console.log(
-  //   `\nOwner of reverse node for jacobvs.b \n${await bns.owner(reverseNode)}`,
-  // );
-  // console.log(
-  //   `\nPublic resolver name() for reverseNode gives back\n${await resolver.name(
-  //     reverseNode,
-  //   )}`,
-  // );
+  let reverseNode = namehash.hash(
+    '3C44CdDdB6a900fa2b585dd299e03d12FA4293BC.addr.reverse',
+  );
+  console.log(
+    `\nOwner of reverse node for jacobvs.b \n${await bns.owner(reverseNode)}`,
+  );
+  console.log(
+    `\nPublic resolver name() for reverseNode gives back\n${await resolver.name(
+      reverseNode,
+    )}`,
+  );
 
-  // console.log(
-  //   `\nPublic Resolver addr() for jacobvs.b node gives back:\n${await resolver[
-  //     'addr(bytes32)'
-  //   ](namehash.hash('jacobvs.b'))}`,
-  // );
-  // console.log(
-  //   `\nPublic Resolver name() for jacobvs.b node gives back:\n${await resolver.name(
-  //     namehash.hash('jacobvs.b'),
-  //   )}`,
-  // );
+  console.log(
+    `\nPublic Resolver addr() for jacobvs.b node gives back:\n${await resolver[
+      'addr(bytes32)'
+    ](namehash.hash('jacobvs.b'))}`,
+  );
+  console.log(
+    `\nPublic Resolver name() for jacobvs.b node gives back:\n${await resolver.name(
+      namehash.hash('jacobvs.b'),
+    )}`,
+  );
 
   console.log('\n==========================tome========================\n');
 
@@ -109,7 +109,7 @@ async function main() {
     `\ntome.b resolver address: ${await bns.resolver(namehash.hash('b'))}`,
   );
 
-  let reverseNode = namehash.hash(
+  reverseNode = namehash.hash(
     '90F79bf6EB2c4f870365E785982E1f101E93b906.addr.reverse',
   );
   console.log(

@@ -7,8 +7,9 @@ import "./ReverseRegistrar.sol";
 import {PublicResolver} from "./PublicResolver.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./profiles/PreventsZWC.sol";
 
-contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
+contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable, PreventsZWC {
     // The BNS registry
     BNS public bns;
     // The Reverse Registrar
@@ -101,7 +102,7 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable {
         address resolver,
         bool updateRegistry,
         bool reverseRecord
-    ) internal live {
+    ) internal live preventZWC(name) {
         uint256 id = uint256(keccak256(abi.encodePacked(name)));
         _mint(owner, id);
         if (updateRegistry) {
