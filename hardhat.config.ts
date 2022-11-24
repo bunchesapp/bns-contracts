@@ -40,7 +40,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       saveDeployments: false,
       tags: ['test', 'legacy', 'use_root'],
-      zksync: true, //use for zkSync dev
+      zksync: process.env.ZKSYNC_DEV === 'true', //use for zkSync dev
     },
     localhost: {
       url: 'http://127.0.0.1:8545',

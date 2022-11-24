@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/BNS.sol": {
-      "lastModificationDate": 1668806076266,
+      "lastModificationDate": 1669143156756,
       "contentHash": "f89d3d21bb927fc9d2a7ed49337a5c41",
       "sourceName": "contracts/BNS.sol",
       "solcConfig": {
@@ -54,7 +54,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/FIFSRegistrar.sol": {
-      "lastModificationDate": 1668806076678,
+      "lastModificationDate": 1669143156758,
       "contentHash": "70fcd6bf33f9c23728d26b0bfb7230f3",
       "sourceName": "contracts/FIFSRegistrar.sol",
       "solcConfig": {
@@ -108,7 +108,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/BNSRegistry.sol": {
-      "lastModificationDate": 1668806076458,
+      "lastModificationDate": 1669143156757,
       "contentHash": "6e10340c2a2dd0f4ca1b9cb718ce7208",
       "sourceName": "contracts/BNSRegistry.sol",
       "solcConfig": {
@@ -162,7 +162,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/PublicResolver.sol": {
-      "lastModificationDate": 1668806076844,
+      "lastModificationDate": 1669143156759,
       "contentHash": "c4f7ce6b8a165530c642515a139fbd9f",
       "sourceName": "contracts/PublicResolver.sol",
       "solcConfig": {
@@ -224,7 +224,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/AddrResolver.sol": {
-      "lastModificationDate": 1668195774141,
+      "lastModificationDate": 1669143156760,
       "contentHash": "633ea4b8855bb2e74ef2a01deb738d0a",
       "sourceName": "contracts/profiles/AddrResolver.sol",
       "solcConfig": {
@@ -280,7 +280,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/NameResolver.sol": {
-      "lastModificationDate": 1668195774145,
+      "lastModificationDate": 1669143156763,
       "contentHash": "229afa80d4df1e8003e3a70ad1ec2ff2",
       "sourceName": "contracts/profiles/NameResolver.sol",
       "solcConfig": {
@@ -335,7 +335,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/PubkeyResolver.sol": {
-      "lastModificationDate": 1668195774146,
+      "lastModificationDate": 1669143156764,
       "contentHash": "2f285fa3e106f00d0045ba6a4dd8a834",
       "sourceName": "contracts/profiles/PubkeyResolver.sol",
       "solcConfig": {
@@ -390,7 +390,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/TextResolver.sol": {
-      "lastModificationDate": 1668195774150,
+      "lastModificationDate": 1669143156764,
       "contentHash": "83e16854bef119f003a972cb02fdc07a",
       "sourceName": "contracts/profiles/TextResolver.sol",
       "solcConfig": {
@@ -445,7 +445,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/Multicallable.sol": {
-      "lastModificationDate": 1668432118861,
+      "lastModificationDate": 1669143156763,
       "contentHash": "509edf29cfe5bb383a1d9352b012b32b",
       "sourceName": "contracts/profiles/Multicallable.sol",
       "solcConfig": {
@@ -500,7 +500,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/ABIResolver.sol": {
-      "lastModificationDate": 1668195774141,
+      "lastModificationDate": 1669143156760,
       "contentHash": "3d2fd26f131c36f8843f12c36ff69322",
       "sourceName": "contracts/profiles/ABIResolver.sol",
       "solcConfig": {
@@ -555,7 +555,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/ContentHashResolver.sol": {
-      "lastModificationDate": 1668195774142,
+      "lastModificationDate": 1669143156760,
       "contentHash": "f2850c06d5ddcc8c741d7bcaf39d30c6",
       "sourceName": "contracts/profiles/ContentHashResolver.sol",
       "solcConfig": {
@@ -610,7 +610,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/ResolverBase.sol": {
-      "lastModificationDate": 1668195774147,
+      "lastModificationDate": 1669143156764,
       "contentHash": "1fb930efdc79c03392d895618f91e569",
       "sourceName": "contracts/profiles/ResolverBase.sol",
       "solcConfig": {
@@ -665,7 +665,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/IAddrResolver.sol": {
-      "lastModificationDate": 1668195774142,
+      "lastModificationDate": 1669143156760,
       "contentHash": "589bd6bf6bee5a82a126b06efeb62fe2",
       "sourceName": "contracts/profiles/IAddrResolver.sol",
       "solcConfig": {
@@ -717,7 +717,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/IAddressResolver.sol": {
-      "lastModificationDate": 1668195774143,
+      "lastModificationDate": 1669143156761,
       "contentHash": "37c9ac3f2d5fa35463485b743760bca0",
       "sourceName": "contracts/profiles/IAddressResolver.sol",
       "solcConfig": {
@@ -823,7 +823,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/IVersionableResolver.sol": {
-      "lastModificationDate": 1668195774145,
+      "lastModificationDate": 1669143156763,
       "contentHash": "6bfec345bfec30f11192e357c3f145b4",
       "sourceName": "contracts/profiles/IVersionableResolver.sol",
       "solcConfig": {
@@ -927,7 +927,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/INameResolver.sol": {
-      "lastModificationDate": 1668195774144,
+      "lastModificationDate": 1669143156762,
       "contentHash": "8e3d2fb5493198a50dbdef963c82e65f",
       "sourceName": "contracts/profiles/INameResolver.sol",
       "solcConfig": {
@@ -979,7 +979,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/IPubkeyResolver.sol": {
-      "lastModificationDate": 1668195774144,
+      "lastModificationDate": 1669143156762,
       "contentHash": "866b1efb73cee6ba0f6851313eb5bd47",
       "sourceName": "contracts/profiles/IPubkeyResolver.sol",
       "solcConfig": {
@@ -1031,7 +1031,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/ITextResolver.sol": {
-      "lastModificationDate": 1668195774144,
+      "lastModificationDate": 1669143156762,
       "contentHash": "ee4f4e4165efacdc71124a6dd13f653f",
       "sourceName": "contracts/profiles/ITextResolver.sol",
       "solcConfig": {
@@ -1083,7 +1083,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/IMulticallable.sol": {
-      "lastModificationDate": 1668195774143,
+      "lastModificationDate": 1669143156761,
       "contentHash": "47ba7492710cb95cfc56f79218f07645",
       "sourceName": "contracts/profiles/IMulticallable.sol",
       "solcConfig": {
@@ -1135,7 +1135,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/IABIResolver.sol": {
-      "lastModificationDate": 1668195774142,
+      "lastModificationDate": 1669143156760,
       "contentHash": "1ebebb06d04b5163aa58ec49a4c915cf",
       "sourceName": "contracts/profiles/IABIResolver.sol",
       "solcConfig": {
@@ -1189,7 +1189,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/IContentHashResolver.sol": {
-      "lastModificationDate": 1668195774143,
+      "lastModificationDate": 1669143156761,
       "contentHash": "02af5a6c21a3b36c57d30d6563863732",
       "sourceName": "contracts/profiles/IContentHashResolver.sol",
       "solcConfig": {
@@ -1671,7 +1671,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/Controllable.sol": {
-      "lastModificationDate": 1668806076527,
+      "lastModificationDate": 1669143156758,
       "contentHash": "a6f4d009ba1bf0538962942c80aa4fca",
       "sourceName": "contracts/Controllable.sol",
       "solcConfig": {
@@ -1725,7 +1725,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/ReverseRegistrar.sol": {
-      "lastModificationDate": 1668806076928,
+      "lastModificationDate": 1669143156759,
       "contentHash": "ee274ea68daf07402146f169f811ac87",
       "sourceName": "contracts/ReverseRegistrar.sol",
       "solcConfig": {
@@ -1783,7 +1783,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/IReverseRegistrar.sol": {
-      "lastModificationDate": 1668806076795,
+      "lastModificationDate": 1669143156759,
       "contentHash": "d94e56f1c922e8e927f5531de0371102",
       "sourceName": "contracts/IReverseRegistrar.sol",
       "solcConfig": {
@@ -1835,8 +1835,8 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/BNSRegistrar.sol": {
-      "lastModificationDate": 1668806076374,
-      "contentHash": "5a281e31fb62e76f07325958e55bfe96",
+      "lastModificationDate": 1669143483830,
+      "contentHash": "1f4d2e9dc0bfbc6d91318563f71e456b",
       "sourceName": "contracts/BNSRegistrar.sol",
       "solcConfig": {
         "version": "0.8.16",
@@ -1884,7 +1884,8 @@
         "./ReverseRegistrar.sol",
         "./PublicResolver.sol",
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./profiles/PreventsZWC.sol"
       ],
       "versionPragmas": [
         ">=0.8.4"
@@ -1894,7 +1895,7 @@
       ]
     },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/IBaseRegistrar.sol": {
-      "lastModificationDate": 1668806076744,
+      "lastModificationDate": 1669143156759,
       "contentHash": "ed8cd3666826c27dfe0d4f4bf4935205",
       "sourceName": "contracts/IBaseRegistrar.sol",
       "solcConfig": {
@@ -1949,8 +1950,60 @@
         "IBaseRegistrar"
       ]
     },
+    "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/profiles/PreventsZWC.sol": {
+      "lastModificationDate": 1669143441046,
+      "contentHash": "a46c233265ab275ac49a4486cc1599c9",
+      "sourceName": "contracts/profiles/PreventsZWC.sol",
+      "solcConfig": {
+        "version": "0.8.16",
+        "settings": {
+          "optimizer": {
+            "enabled": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        },
+        "zksolc": {
+          "version": "1.2.0",
+          "compilerSource": "binary",
+          "settings": {
+            "compilerPath": "",
+            "experimental": {
+              "dockerImage": "matterlabs/zksolc",
+              "tag": "v1.2.0"
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.8.4"
+      ],
+      "artifacts": [
+        "PreventsZWC"
+      ]
+    },
     "/Users/jacobvanschenck/dev/bunches/bunches-name-service/contracts/DummyNameWrapper.sol": {
-      "lastModificationDate": 1668806076615,
+      "lastModificationDate": 1669143156758,
       "contentHash": "cee87dc13673c99f136c84d3006f1e89",
       "sourceName": "contracts/DummyNameWrapper.sol",
       "solcConfig": {

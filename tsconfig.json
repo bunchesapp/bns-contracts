@@ -11,6 +11,6 @@
     "./test/**/*.ts",
     "./typings-custom/**/*.ts",
     "./deploy/**/*.ts"
-, "scripts/test_zwc.js"  ],
+  ],
   "files": ["./hardhat.config.ts"]
 }
