@@ -1,7 +1,6 @@
 import { ethers } from 'hardhat';
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
-import { resolveObjectURL } from 'buffer';
 const sha3 = utils.sha3;
 
 const ZERO_HASH =

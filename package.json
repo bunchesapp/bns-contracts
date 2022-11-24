@@ -7,6 +7,7 @@
     "deploy": "hardhat run scripts/deploy.ts",
     "deploy:testnet": "hardhat run scripts/deploy.ts --network goerli",
     "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "deploy:zk": "hardhat deploy-zksync",
     "lint": "hardhat check",
     "test": "hardhat test",
     "test:local": "hardhat --network localhost",

@@ -9,8 +9,8 @@ import 'hardhat-deploy';
 import 'hardhat-gas-reporter';
 import { HardhatUserConfig, task } from 'hardhat/config';
 
-// import '@matterlabs/hardhat-zksync-deploy';
-// import '@matterlabs/hardhat-zksync-solc';
+import '@matterlabs/hardhat-zksync-deploy';
+import '@matterlabs/hardhat-zksync-solc';
 
 // Load environment variables from .env file. Suppress warnings using silent
 // if this file is missing. dotenv will never modify any environment variables
@@ -40,7 +40,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       saveDeployments: false,
       tags: ['test', 'legacy', 'use_root'],
-      zksync: false, //use for zkSync dev
+      zksync: process.env.ZKSYNC_DEV === 'true', //use for zkSync dev
     },
     localhost: {
       url: 'http://127.0.0.1:8545',
@@ -67,20 +67,20 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
-  // zksolc: {
-  //   version: '1.2.0',
-  //   compilerSource: 'binary',
-  //   settings: {
-  //     experimental: {
-  //       dockerImage: 'matterlabs/zksolc',
-  //       tag: 'v1.2.0',
-  //     },
-  //   },
-  // },
-  // zkSyncDeploy: {
-  //   zkSyncNetwork: 'https://zksync2-testnet.zksync.dev',
-  //   ethNetwork: 'goerli', // Can also be the RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
-  // },
+  zksolc: {
+    version: '1.2.0',
+    compilerSource: 'binary',
+    settings: {
+      experimental: {
+        dockerImage: 'matterlabs/zksolc',
+        tag: 'v1.2.0',
+      },
+    },
+  },
+  zkSyncDeploy: {
+    zkSyncNetwork: 'https://zksync2-testnet.zksync.dev',
+    ethNetwork: 'goerli', // Can also be the RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
+  },
   mocha: {},
   solidity: {
     compilers: [
@@ -89,7 +89,7 @@ const config: HardhatUserConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 10000,
           },
         },
       },
