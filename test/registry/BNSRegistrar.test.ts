@@ -61,7 +61,7 @@ describe('BNSRegistrar.sol', () => {
     expect(await registrar.ownerOf(sha3('testname'))).to.eql(addr1.address);
   });
 
-  it('should allow registrations without updating the regisrty', async () => {
+  it('should allow registrations without updating the registry', async () => {
     const { bns, registrar, owner, resolver, addr1 } = await loadFixture(
       deployBNSRegistrar,
     );
@@ -164,7 +164,7 @@ describe('BNSRegistrar.sol', () => {
       .transferFrom(addr1.address, addr3.address, sha3('newname'));
     expect(await registrar.ownerOf(sha3('newname'))).to.eql(addr3.address);
 
-    //Transfer does now update BNS Registry without reclaim
+    //Transfer does not update BNS Registry without reclaim
     expect(await bns.owner(namehash.hash('newname.b'))).to.eql(addr1.address);
     await registrar.connect(addr3).reclaim(sha3('newname'), addr3.address);
     expect(await bns.owner(namehash.hash('newname.b'))).to.eql(addr3.address);
@@ -180,5 +180,23 @@ describe('BNSRegistrar.sol', () => {
         .connect(addr3)
         .transferFrom(addr1.address, addr3.address, sha3('newname')),
     ).to.be.reverted;
+  });
+  it('forbids registrations containing zero width characters', async () => {
+    const { bns, registrar, resolver, owner, addr1, addr3 } = await loadFixture(
+      deployBNSRegistrar,
+    );
+    const badName1 = 'jacobvs​';
+    const badName2 = 'jacobvs⁠';
+    const badName3 = 'jacobvs𝅳';
+
+    await expect(
+      registrar.register(badName1, addr1.address, [], resolver.address),
+    ).to.be.revertedWith('Name cannot contain zero width characters');
+    await expect(
+      registrar.register(badName2, addr1.address, [], resolver.address),
+    ).to.be.revertedWith('Name cannot contain zero width characters');
+    await expect(
+      registrar.register(badName3, addr1.address, [], resolver.address),
+    ).to.be.revertedWith('Name cannot contain zero width characters');
   });
 });
