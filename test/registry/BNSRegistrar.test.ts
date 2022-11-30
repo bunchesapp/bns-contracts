@@ -1,6 +1,6 @@
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
@@ -39,11 +39,16 @@ describe('BNSRegistrar.sol', () => {
     await dummyReverse.setDefaultResolver(resolver.address);
 
     const BNSRegistrar = await ethers.getContractFactory('BNSRegistrar');
-    const registrar = await BNSRegistrar.deploy(
+    // const registrar = await BNSRegistrar.deploy(
+    //   bns.address,
+    //   namehash.hash('b'),
+    //   dummyReverse.address,
+    // );
+    const registrar = await upgrades.deployProxy(BNSRegistrar, [
       bns.address,
       namehash.hash('b'),
       dummyReverse.address,
-    );
+    ]);
 
     await dummyReverse.setController(registrar.address, true);
     await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), registrar.address);
