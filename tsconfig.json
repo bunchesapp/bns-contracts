@@ -9,8 +9,7 @@
   "include": [
     "./scripts/**/*.ts",
     "./test/**/*.ts",
-    "./typings-custom/**/*.ts",
-    "./deploy/**/*.ts"
+    "./typings-custom/**/*.ts"
   ],
   "files": ["./hardhat.config.ts"]
 }

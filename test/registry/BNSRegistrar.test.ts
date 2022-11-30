@@ -20,7 +20,9 @@ describe('BNSRegistrar.sol', () => {
     const DummyReverseRegistrar = await ethers.getContractFactory(
       'ReverseRegistrar',
     );
-    const dummyReverse = await DummyReverseRegistrar.deploy(bns.address);
+    const dummyReverse = await upgrades.deployProxy(DummyReverseRegistrar, [
+      bns.address,
+    ]);
     await bns.setSubnodeOwner(ZERO_HASH, sha3('reverse'), owner.address);
     await bns.setSubnodeOwner(
       namehash.hash('reverse'),
@@ -39,11 +41,6 @@ describe('BNSRegistrar.sol', () => {
     await dummyReverse.setDefaultResolver(resolver.address);
 
     const BNSRegistrar = await ethers.getContractFactory('BNSRegistrar');
-    // const registrar = await BNSRegistrar.deploy(
-    //   bns.address,
-    //   namehash.hash('b'),
-    //   dummyReverse.address,
-    // );
     const registrar = await upgrades.deployProxy(BNSRegistrar, [
       bns.address,
       namehash.hash('b'),

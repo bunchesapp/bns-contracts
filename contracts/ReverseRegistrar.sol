@@ -3,7 +3,7 @@ pragma solidity >=0.8.4;
 
 import "./BNS.sol";
 import "./IReverseRegistrar.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./Controllable.sol";
 
 abstract contract NameResolver {
@@ -15,27 +15,21 @@ bytes32 constant lookup = 0x3031323334353637383961626364656600000000000000000000
 // namehash('addr.reverse')
 bytes32 constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
 
-contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
-    BNS public immutable bns;
+contract ReverseRegistrar is Initializable, Controllable, IReverseRegistrar {
+    BNS public bns;
     NameResolver public defaultResolver;
 
     event ReverseClaimed(address indexed addr, bytes32 indexed node);
     event DefaultResolverChanged(NameResolver indexed resolver);
 
-    /**
-     * @dev Constructor
-     * @param bnsAddr The address of the BNS registry.
-     */
-    constructor(BNS bnsAddr) {
-        bns = bnsAddr;
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
 
-        // Assign ownership of the reverse record to our deployer
-        ReverseRegistrar oldRegistrar = ReverseRegistrar(
-            bnsAddr.owner(ADDR_REVERSE_NODE)
-        );
-        if (address(oldRegistrar) != address(0x0)) {
-            oldRegistrar.claim(msg.sender);
-        }
+    function initialize(BNS _bns) public initializer {
+        __Ownable_init();
+        bns = _bns;
     }
 
     modifier authorised(address addr) {
@@ -97,11 +91,10 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
      * @param resolver The address of the resolver to set; 0 to leave unchanged.
      * @return The BNS node hash of the reverse record.
      */
-    function claimWithResolver(address owner, address resolver)
-        public
-        override
-        returns (bytes32)
-    {
+    function claimWithResolver(
+        address owner,
+        address resolver
+    ) public override returns (bytes32) {
         return claimForAddr(msg.sender, owner, resolver);
     }
 
@@ -182,7 +175,7 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
     }
 
     function ownsContract(address addr) internal view returns (bool) {
-        try Ownable(addr).owner() returns (address owner) {
+        try OwnableUpgradeable(addr).owner() returns (address owner) {
             return owner == msg.sender;
         } catch {
             return false;
