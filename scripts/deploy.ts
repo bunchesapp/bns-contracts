@@ -19,7 +19,7 @@ async function main() {
   console.log('\nDeploying BNS Registry...');
 
   const BNSRegistry = await ethers.getContractFactory('BNSRegistry');
-  const registry = await BNSRegistry.deploy();
+  const registry = await upgrades.deployProxy(BNSRegistry);
 
   console.log(`\nSetting owner as owner of root node...`);
   await registry.setOwner(ZERO_HASH, owner.address);

@@ -2,11 +2,12 @@
 pragma solidity >=0.8.4;
 
 import "./BNS.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /**
  * The BNS registry contract
  */
-contract BNSRegistry is BNS {
+contract BNSRegistry is BNS, Initializable {
     struct Record {
         address owner;
         address resolver;
@@ -25,10 +26,12 @@ contract BNSRegistry is BNS {
         _;
     }
 
-    /**
-     * @dev Constructs a new BNS registry.
-     */
+    /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
+        _disableInitializers();
+    }
+
+    function initialize() public initializer {
         records[0x0].owner = msg.sender;
     }
 
@@ -69,12 +72,10 @@ contract BNSRegistry is BNS {
      * @param _node The node to transfer ownership of.
      * @param _owner The address of the new owner.
      */
-    function setOwner(bytes32 _node, address _owner)
-        public
-        virtual
-        override
-        authorized(_node)
-    {
+    function setOwner(
+        bytes32 _node,
+        address _owner
+    ) public virtual override authorized(_node) {
         _setOwner(_node, _owner);
         emit Transfer(_node, _owner);
     }
@@ -101,12 +102,10 @@ contract BNSRegistry is BNS {
      * @param _node The node to update.
      * @param _resolver The address of the resolver.
      */
-    function setResolver(bytes32 _node, address _resolver)
-        public
-        virtual
-        override
-        authorized(_node)
-    {
+    function setResolver(
+        bytes32 _node,
+        address _resolver
+    ) public virtual override authorized(_node) {
         emit NewResolver(_node, _resolver);
         records[_node].resolver = _resolver;
     }
@@ -117,11 +116,10 @@ contract BNSRegistry is BNS {
      * @param _operator Address to add to the set of authorized operators.
      * @param _approved True if the operator is approved, false to revoke approval.
      */
-    function setApprovalForAll(address _operator, bool _approved)
-        external
-        virtual
-        override
-    {
+    function setApprovalForAll(
+        address _operator,
+        bool _approved
+    ) external virtual override {
         operators[msg.sender][_operator] = _approved;
         emit ApprovalForAll(msg.sender, _operator, _approved);
     }
@@ -131,13 +129,9 @@ contract BNSRegistry is BNS {
      * @param _node The specified node.
      * @return address of the owner.
      */
-    function owner(bytes32 _node)
-        public
-        view
-        virtual
-        override
-        returns (address)
-    {
+    function owner(
+        bytes32 _node
+    ) public view virtual override returns (address) {
         address addr = records[_node].owner;
         if (addr == address(this)) {
             return address(0x0);
@@ -151,13 +145,9 @@ contract BNSRegistry is BNS {
      * @param _node The specified node.
      * @return address of the resolver.
      */
-    function resolver(bytes32 _node)
-        public
-        view
-        virtual
-        override
-        returns (address)
-    {
+    function resolver(
+        bytes32 _node
+    ) public view virtual override returns (address) {
         return records[_node].resolver;
     }
 
@@ -166,13 +156,9 @@ contract BNSRegistry is BNS {
      * @param _node The specified node.
      * @return Bool if record exists
      */
-    function recordExists(bytes32 _node)
-        public
-        view
-        virtual
-        override
-        returns (bool)
-    {
+    function recordExists(
+        bytes32 _node
+    ) public view virtual override returns (bool) {
         return records[_node].owner != address(0x0);
     }
 
@@ -182,13 +168,10 @@ contract BNSRegistry is BNS {
      * @param _operator The address that acts on behalf of the owner.
      * @return True if `operator` is an approved operator for `owner`, false otherwise.
      */
-    function isApprovedForAll(address _owner, address _operator)
-        external
-        view
-        virtual
-        override
-        returns (bool)
-    {
+    function isApprovedForAll(
+        address _owner,
+        address _operator
+    ) external view virtual override returns (bool) {
         return operators[_owner][_operator];
     }
 

@@ -1,6 +1,6 @@
 import { loadFixture, time } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
@@ -16,7 +16,7 @@ describe('FIFSRegistrar.sol', async () => {
   const deployFIFSRegistrar = async () => {
     const [owner, addr1, addr2, addr3] = await ethers.getSigners();
     const BNS = await ethers.getContractFactory('BNSRegistry');
-    const bns = await BNS.deploy();
+    const bns = await upgrades.deployProxy(BNS);
 
     const FIFSRegistrar = await ethers.getContractFactory('FIFSRegistrar');
     const registrar = await FIFSRegistrar.deploy(bns.address, ZERO_HASH);

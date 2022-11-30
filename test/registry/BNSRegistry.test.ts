@@ -1,6 +1,6 @@
 import { loadFixture, time } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
@@ -18,7 +18,7 @@ describe('BNSRegistry.sol', async () => {
   const deployBNSRegistry = async () => {
     const [owner, addr1, addr2, addr3] = await ethers.getSigners();
     const BNS = await ethers.getContractFactory('BNSRegistry');
-    const bns = await BNS.deploy();
+    const bns = await upgrades.deployProxy(BNS);
 
     const Resolver = await ethers.getContractFactory('PublicResolver');
     const resolver = await Resolver.deploy(

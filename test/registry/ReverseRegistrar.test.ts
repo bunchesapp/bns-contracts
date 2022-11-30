@@ -22,7 +22,7 @@ describe('ReverseRegistrar.sol', () => {
     const node3 = getReverseNode(addr2.address);
 
     const BNS = await ethers.getContractFactory('BNSRegistry');
-    const bns = await BNS.deploy();
+    const bns = await upgrades.deployProxy(BNS);
 
     const NameWrapper = await ethers.getContractFactory('DummyNameWrapper');
     const nameWrapper = await NameWrapper.deploy();

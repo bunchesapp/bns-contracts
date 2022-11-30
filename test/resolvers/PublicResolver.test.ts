@@ -3,7 +3,7 @@ import {
   setBlockGasLimit,
 } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
@@ -20,7 +20,7 @@ describe('PublicResolver.sol', async () => {
     const node = namehash.hash('b');
 
     const BNS = await ethers.getContractFactory('BNSRegistry');
-    const bns = await BNS.deploy();
+    const bns = await upgrades.deployProxy(BNS);
 
     const NameWrapper = await ethers.getContractFactory('DummyNameWrapper');
     const nameWrapper = await NameWrapper.deploy();

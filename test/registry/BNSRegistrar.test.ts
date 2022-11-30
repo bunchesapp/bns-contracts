@@ -15,7 +15,7 @@ describe('BNSRegistrar.sol', () => {
   const deployBNSRegistrar = async () => {
     const [owner, addr1, addr2, addr3] = await ethers.getSigners();
     const BNS = await ethers.getContractFactory('BNSRegistry');
-    const bns = await BNS.deploy();
+    const bns = await upgrades.deployProxy(BNS);
 
     const DummyReverseRegistrar = await ethers.getContractFactory(
       'ReverseRegistrar',
