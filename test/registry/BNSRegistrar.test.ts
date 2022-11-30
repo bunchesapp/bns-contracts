@@ -31,12 +31,12 @@ describe('BNSRegistrar.sol', () => {
     );
 
     const Resolver = await ethers.getContractFactory('PublicResolver');
-    const resolver = await Resolver.deploy(
+    const resolver = await upgrades.deployProxy(Resolver, [
       bns.address,
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       dummyReverse.address,
-    );
+    ]);
 
     await dummyReverse.setDefaultResolver(resolver.address);
 
@@ -97,6 +97,7 @@ describe('BNSRegistrar.sol', () => {
     ]);
 
     await resolver.connect(addr1).setApprovalForAll(registrar.address, true);
+    await resolver.connect(addr1).setApprovalForAll(resolver.address, true);
     await registrar
       .connect(addr1)
       .register(label, addr1.address, [addrSet, textSet], resolver.address);

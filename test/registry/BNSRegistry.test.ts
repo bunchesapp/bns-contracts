@@ -21,12 +21,12 @@ describe('BNSRegistry.sol', async () => {
     const bns = await upgrades.deployProxy(BNS);
 
     const Resolver = await ethers.getContractFactory('PublicResolver');
-    const resolver = await Resolver.deploy(
+    const resolver = await upgrades.deployProxy(Resolver, [
       bns.address,
       EMPTY_ADDRESS,
       EMPTY_ADDRESS,
       EMPTY_ADDRESS,
-    );
+    ]);
 
     return { bns, resolver, owner, addr1, addr2, addr3 };
   };

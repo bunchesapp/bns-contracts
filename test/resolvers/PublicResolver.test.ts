@@ -26,12 +26,12 @@ describe('PublicResolver.sol', async () => {
     const nameWrapper = await NameWrapper.deploy();
 
     const PublicResolver = await ethers.getContractFactory('PublicResolver');
-    const resolver = await PublicResolver.deploy(
+    const resolver = await upgrades.deployProxy(PublicResolver, [
       bns.address,
       nameWrapper.address,
       controller.address,
       EMPTY_ADDRESS,
-    );
+    ]);
 
     await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), owner.address);
 
@@ -667,6 +667,8 @@ describe('PublicResolver.sol', async () => {
         'url',
         'https://friends.bunches.xyz',
       ]);
+
+      await resolver.setApprovalForAll(resolver.address, true);
 
       await expect(resolver.multicall([nameSet, textSet]))
         .to.emit(resolver, 'NameChanged')

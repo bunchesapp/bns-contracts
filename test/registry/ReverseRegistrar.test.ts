@@ -35,12 +35,12 @@ describe('ReverseRegistrar.sol', () => {
     ]);
 
     const PublicResolver = await ethers.getContractFactory('PublicResolver');
-    const resolver = await PublicResolver.deploy(
+    const resolver = await upgrades.deployProxy(PublicResolver, [
       bns.address,
       nameWrapper.address,
       '0x0000000000000000000000000000000000000000',
       registrar.address,
-    );
+    ]);
     await registrar.setDefaultResolver(resolver.address);
     const defaultResolverABI = [
       'function name(bytes32) external view returns (string)',

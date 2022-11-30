@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.16 <0.9.0;
 
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./BNS.sol";
 import "./profiles/AddrResolver.sol";
 import "./profiles/NameResolver.sol";
@@ -19,6 +20,7 @@ interface INameWrapper {
  * address.
  */
 contract PublicResolver is
+    Initializable,
     AddrResolver,
     ABIResolver,
     ContentHashResolver,
@@ -27,10 +29,10 @@ contract PublicResolver is
     TextResolver,
     Multicallable
 {
-    BNS immutable bns;
-    INameWrapper immutable nameWrapper;
-    address immutable trustedETHController;
-    address immutable trustedReverseRegistrar;
+    BNS public bns;
+    INameWrapper public nameWrapper;
+    address trustedETHController;
+    address trustedReverseRegistrar;
 
     /**
      * A mapping of operators. An address that is authorised for an address
@@ -47,12 +49,17 @@ contract PublicResolver is
         bool approved
     );
 
-    constructor(
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(
         BNS _bns,
         INameWrapper wrapperAddress,
         address _trustedETHController,
         address _trustedReverseRegistrar
-    ) {
+    ) public initializer {
         bns = _bns;
         nameWrapper = wrapperAddress;
         trustedETHController = _trustedETHController;
@@ -75,11 +82,10 @@ contract PublicResolver is
     /**
      * @dev See {IERC1155-isApprovedForAll}.
      */
-    function isApprovedForAll(address account, address operator)
-        public
-        view
-        returns (bool)
-    {
+    function isApprovedForAll(
+        address account,
+        address operator
+    ) public view returns (bool) {
         return _operatorApprovals[account][operator];
     }
 
@@ -97,7 +103,9 @@ contract PublicResolver is
         return owner == msg.sender || isApprovedForAll(owner, msg.sender);
     }
 
-    function supportsInterface(bytes4 interfaceID)
+    function supportsInterface(
+        bytes4 interfaceID
+    )
         public
         view
         override(

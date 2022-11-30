@@ -42,12 +42,12 @@ async function main() {
   console.log('\n===================Public Resolver====================');
   console.log('\nDeploying Public Resolver...');
   const PublicResolver = await ethers.getContractFactory('PublicResolver');
-  const resolver = await PublicResolver.deploy(
+  const resolver = await upgrades.deployProxy(PublicResolver, [
     registry.address,
     ZERO_ADDRESS,
     ZERO_ADDRESS,
     reverseRegistrar.address,
-  );
+  ]);
 
   console.log(
     '\nSetting Public Resolver as defaultResolver for Reverse Registrar...',
