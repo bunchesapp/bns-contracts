@@ -5,15 +5,22 @@ import "./BNS.sol";
 import "./IBaseRegistrar.sol";
 import "./ReverseRegistrar.sol";
 import {PublicResolver} from "./PublicResolver.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./profiles/PreventsZWC.sol";
 
-contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable, PreventsZWC {
+contract BNSRegistrar is
+    Initializable,
+    ERC721Upgradeable,
+    OwnableUpgradeable,
+    IBaseRegistrar,
+    PreventsZWC
+{
     // The BNS registry
     BNS public bns;
     // The Reverse Registrar
-    ReverseRegistrar public immutable reverseRegistrar;
+    ReverseRegistrar public reverseRegistrar;
 
     // The namehash of the TLD this registrar owns (eg, .b), set upon construction
     bytes32 public baseNode;
@@ -34,11 +41,18 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable, PreventsZWC {
     bytes4 private constant RECLAIM_ID =
         bytes4(keccak256("reclaim(uint256,address)"));
 
-    constructor(
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(
         BNS _bns,
         bytes32 _baseNode,
         ReverseRegistrar _reverseRegistrar
-    ) ERC721("", "") {
+    ) public initializer {
+        __ERC721_init("", "");
+        __Ownable_init();
         bns = _bns;
         baseNode = _baseNode;
         reverseRegistrar = _reverseRegistrar;
@@ -161,10 +175,12 @@ contract BNSRegistrar is ERC721, IBaseRegistrar, Ownable, PreventsZWC {
         );
     }
 
-    function supportsInterface(bytes4 interfaceID)
+    function supportsInterface(
+        bytes4 interfaceID
+    )
         public
         pure
-        override(ERC721, IERC165)
+        override(ERC721Upgradeable, IERC165Upgradeable)
         returns (bool)
     {
         return

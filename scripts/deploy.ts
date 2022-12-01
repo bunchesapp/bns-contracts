@@ -1,4 +1,4 @@
-import { network, ethers } from 'hardhat';
+import { network, ethers, upgrades } from 'hardhat';
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
 const sha3 = utils.sha3;
@@ -19,7 +19,7 @@ async function main() {
   console.log('\nDeploying BNS Registry...');
 
   const BNSRegistry = await ethers.getContractFactory('BNSRegistry');
-  const registry = await BNSRegistry.deploy();
+  const registry = await upgrades.deployProxy(BNSRegistry);
 
   console.log(`\nSetting owner as owner of root node...`);
   await registry.setOwner(ZERO_HASH, owner.address);
@@ -29,7 +29,9 @@ async function main() {
   console.log('\n===================Reverse Resolver===================\n');
   console.log('Deploying Reverse Registrar...');
   const ReverseRegistrar = await ethers.getContractFactory('ReverseRegistrar');
-  const reverseRegistrar = await ReverseRegistrar.deploy(registry.address);
+  const reverseRegistrar = await upgrades.deployProxy(ReverseRegistrar, [
+    registry.address,
+  ]);
 
   console.log(
     '\nSetting Reverse Registrar as owner of "addr.reverse" subnode...',
@@ -40,12 +42,12 @@ async function main() {
   console.log('\n===================Public Resolver====================');
   console.log('\nDeploying Public Resolver...');
   const PublicResolver = await ethers.getContractFactory('PublicResolver');
-  const resolver = await PublicResolver.deploy(
+  const resolver = await upgrades.deployProxy(PublicResolver, [
     registry.address,
     ZERO_ADDRESS,
     ZERO_ADDRESS,
     reverseRegistrar.address,
-  );
+  ]);
 
   console.log(
     '\nSetting Public Resolver as defaultResolver for Reverse Registrar...',
@@ -68,11 +70,12 @@ async function main() {
   console.log('\n=====================.b Registrar=====================\n');
   console.log('\nDeploying .b Registrar ...');
   const BNSRegistrar = await ethers.getContractFactory('BNSRegistrar');
-  const registrar = await BNSRegistrar.deploy(
+
+  const registrar = await upgrades.deployProxy(BNSRegistrar, [
     registry.address,
     namehash.hash('b'),
     reverseRegistrar.address,
-  );
+  ]);
 
   console.log('\nCreating new subnode for ".b"...');
   await registry

@@ -3,9 +3,9 @@ pragma solidity >=0.8.4;
 
 import "./BNS.sol";
 import "./IBaseRegistrar.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 
-interface IBaseRegistrar is IERC721 {
+interface IBaseRegistrar is IERC721Upgradeable {
     event NameMigrated(uint256 indexed id, address indexed owner);
     event NameRegistered(uint256 indexed id, address indexed owner);
 

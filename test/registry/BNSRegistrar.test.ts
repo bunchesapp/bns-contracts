@@ -1,6 +1,6 @@
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
@@ -15,12 +15,14 @@ describe('BNSRegistrar.sol', () => {
   const deployBNSRegistrar = async () => {
     const [owner, addr1, addr2, addr3] = await ethers.getSigners();
     const BNS = await ethers.getContractFactory('BNSRegistry');
-    const bns = await BNS.deploy();
+    const bns = await upgrades.deployProxy(BNS);
 
     const DummyReverseRegistrar = await ethers.getContractFactory(
       'ReverseRegistrar',
     );
-    const dummyReverse = await DummyReverseRegistrar.deploy(bns.address);
+    const dummyReverse = await upgrades.deployProxy(DummyReverseRegistrar, [
+      bns.address,
+    ]);
     await bns.setSubnodeOwner(ZERO_HASH, sha3('reverse'), owner.address);
     await bns.setSubnodeOwner(
       namehash.hash('reverse'),
@@ -29,21 +31,21 @@ describe('BNSRegistrar.sol', () => {
     );
 
     const Resolver = await ethers.getContractFactory('PublicResolver');
-    const resolver = await Resolver.deploy(
+    const resolver = await upgrades.deployProxy(Resolver, [
       bns.address,
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       dummyReverse.address,
-    );
+    ]);
 
     await dummyReverse.setDefaultResolver(resolver.address);
 
     const BNSRegistrar = await ethers.getContractFactory('BNSRegistrar');
-    const registrar = await BNSRegistrar.deploy(
+    const registrar = await upgrades.deployProxy(BNSRegistrar, [
       bns.address,
       namehash.hash('b'),
       dummyReverse.address,
-    );
+    ]);
 
     await dummyReverse.setController(registrar.address, true);
     await bns.setSubnodeOwner(ZERO_HASH, sha3('b'), registrar.address);
@@ -95,6 +97,7 @@ describe('BNSRegistrar.sol', () => {
     ]);
 
     await resolver.connect(addr1).setApprovalForAll(registrar.address, true);
+    await resolver.connect(addr1).setApprovalForAll(resolver.address, true);
     await registrar
       .connect(addr1)
       .register(label, addr1.address, [addrSet, textSet], resolver.address);

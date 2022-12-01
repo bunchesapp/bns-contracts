@@ -3,6 +3,7 @@ import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-solhint';
 import '@nomiclabs/hardhat-truffle5';
 import '@nomiclabs/hardhat-waffle';
+import '@openzeppelin/hardhat-upgrades';
 import dotenv from 'dotenv';
 import 'hardhat-abi-exporter';
 import 'hardhat-deploy';

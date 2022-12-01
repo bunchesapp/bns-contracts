@@ -1,6 +1,6 @@
 import { loadFixture, time } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 import namehash from 'eth-ens-namehash';
 import utils from 'web3-utils';
@@ -22,7 +22,7 @@ describe('ReverseRegistrar.sol', () => {
     const node3 = getReverseNode(addr2.address);
 
     const BNS = await ethers.getContractFactory('BNSRegistry');
-    const bns = await BNS.deploy();
+    const bns = await upgrades.deployProxy(BNS);
 
     const NameWrapper = await ethers.getContractFactory('DummyNameWrapper');
     const nameWrapper = await NameWrapper.deploy();
@@ -30,15 +30,17 @@ describe('ReverseRegistrar.sol', () => {
     const ReverseRegistrar = await ethers.getContractFactory(
       'ReverseRegistrar',
     );
-    const registrar = await ReverseRegistrar.deploy(bns.address);
+    const registrar = await upgrades.deployProxy(ReverseRegistrar, [
+      bns.address,
+    ]);
 
     const PublicResolver = await ethers.getContractFactory('PublicResolver');
-    const resolver = await PublicResolver.deploy(
+    const resolver = await upgrades.deployProxy(PublicResolver, [
       bns.address,
       nameWrapper.address,
       '0x0000000000000000000000000000000000000000',
       registrar.address,
-    );
+    ]);
     await registrar.setDefaultResolver(resolver.address);
     const defaultResolverABI = [
       'function name(bytes32) external view returns (string)',
@@ -48,7 +50,9 @@ describe('ReverseRegistrar.sol', () => {
       defaultResolverABI,
       ethers.provider,
     );
-    const dummyOwnable = await ReverseRegistrar.deploy(bns.address);
+    const dummyOwnable = await upgrades.deployProxy(ReverseRegistrar, [
+      bns.address,
+    ]);
     const dummyOwnableReverseNode = getReverseNode(dummyOwnable.address);
 
     await bns.setSubnodeOwner(ZERO_HASH, sha3('reverse'), owner.address);
@@ -330,4 +334,3 @@ describe('ReverseRegistrar.sol', () => {
     });
   });
 });
- 

@@ -5,10 +5,10 @@ import "./IMulticallable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 
 abstract contract Multicallable is IMulticallable, ERC165 {
-    function _multicall(bytes32 nodehash, bytes[] calldata data)
-        internal
-        returns (bytes[] memory results)
-    {
+    function _multicall(
+        bytes32 nodehash,
+        bytes[] calldata data
+    ) internal returns (bytes[] memory results) {
         results = new bytes[](data.length);
         for (uint256 i = 0; i < data.length; i++) {
             if (nodehash != bytes32(0)) {
@@ -18,10 +18,8 @@ abstract contract Multicallable is IMulticallable, ERC165 {
                     "multicall: All records must have a matching namehash"
                 );
             }
-            (bool success, bytes memory result) = address(this).delegatecall(
-                data[i]
-            );
-            require(success, "delegatecall failed");
+            (bool success, bytes memory result) = address(this).call(data[i]);
+            require(success, "mulit call failed");
             results[i] = result;
         }
         return results;
@@ -30,28 +28,22 @@ abstract contract Multicallable is IMulticallable, ERC165 {
     // This function provides an extra security check when called
     // from priviledged contracts (such as EthRegistrarController)
     // that can set records on behalf of the node owners
-    function multicallWithNodeCheck(bytes32 nodehash, bytes[] calldata data)
-        external
-        returns (bytes[] memory results)
-    {
+    function multicallWithNodeCheck(
+        bytes32 nodehash,
+        bytes[] calldata data
+    ) external returns (bytes[] memory results) {
         return _multicall(nodehash, data);
     }
 
-    function multicall(bytes[] calldata data)
-        public
-        override
-        returns (bytes[] memory results)
-    {
+    function multicall(
+        bytes[] calldata data
+    ) public override returns (bytes[] memory results) {
         return _multicall(bytes32(0), data);
     }
 
-    function supportsInterface(bytes4 interfaceID)
-        public
-        view
-        virtual
-        override
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceID
+    ) public view virtual override returns (bool) {
         return
             interfaceID == type(IMulticallable).interfaceId ||
             super.supportsInterface(interfaceID);
