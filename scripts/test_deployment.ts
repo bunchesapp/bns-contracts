@@ -89,7 +89,7 @@ async function main() {
     'url',
     'https://friends.bunches.xyz',
   ]);
-  await resolver.connect(tome).setApprovalForAll(resolver.address, true);
+  await resolver.connect(tome).setApprovalForAll(registrar.address, true);
   await registrar
     .connect(tome)
     .register('tome', tome.address, [addrSet, textSet], resolver.address);

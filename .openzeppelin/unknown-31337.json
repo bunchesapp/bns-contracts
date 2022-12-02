@@ -2,7 +2,7 @@
   "manifestVersion": "3.2",
   "admin": {
     "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    "txHash": "0xa4518b0c34ac3418429cdd3f1bf112333b559f39ec55406164c6419c99506ca1"
+    "txHash": "0x8bccd17f2f16a4af8daa97d5178ea4989f50aafdee207bf9e158dc716b7a42db"
   },
   "proxies": [
     {
@@ -1036,30 +1036,30 @@
       "kind": "transparent"
     },
     {
-      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x5c9e987b44a350667303099ba48955ada6f6f60b743db446399ce8ae202bc297",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0xe9bb978fe730faf6c9085afee8c6a590717a41f421e1186b674a907529b88a17",
-      "kind": "transparent"
-    },
-    {
       "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-      "txHash": "0x14459f3890f965a88bb16af9a0adaab6651dc5a5c5b1930af8dbb90935ae3b59",
+      "txHash": "0xae28d9c2ccd86f1ca01a8f6b0705e7b3809ac703b764f71cc0861eccdd3b82e8",
       "kind": "transparent"
     },
     {
       "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-      "txHash": "0x539cf30ae33b934bc558f115ad73b1a8b5b8222750f4b835087098d3678d0424",
+      "txHash": "0x3559bdf9366d30e4cc20719a93265c98abca1bb4d07b10cbb47ad9e9c0de349a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "txHash": "0x2a385cfcd2faf7275f867ee2e62a9447033eacaa6ab8c11705505593400f8b1a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0xada58e0804b40de8471a4844b9ffea89829e410fd1984db3b1ae50861a38cc9a",
       "kind": "transparent"
     }
   ],
   "impls": {
     "8f7df01d2d189da6984ec9472b76446c0b160f7693b195e2941055e96344e816": {
       "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-      "txHash": "0xe3b5c1bcafd45cdf36476cfaf00806ad2104bfc018eaa8f4df1522ed966fcdaa",
+      "txHash": "0xda1dc47bafcc15cb971f485ce57245ec691e15a6496393be78ad607ddfa89910",
       "layout": {
         "solcVersion": "0.8.16",
         "storage": [
@@ -1259,7 +1259,7 @@
     },
     "6da479ebaec2c794f34463607752128f7114c04dca24ec0acc42cd368d508c58": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x8a85f46745aa452426d72badecb53b3164b3ccc97f1bac8efd524ce974bad0af",
+      "txHash": "0x1bea6a9c6e2fc1dcfe5d32a099e37f2de34ff062144a7abee0faaeb3694a4614",
       "layout": {
         "solcVersion": "0.8.16",
         "storage": [
@@ -1347,121 +1347,9 @@
         }
       }
     },
-    "7772332df7a914cdd6b517269b7426296e9c3d9e04e277f704486bbb2c53e622": {
-      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0xddd883edc1db69b0d413845b154f90738d0c50a1dcbbb050eb73b4f8c0524931",
-      "layout": {
-        "solcVersion": "0.8.16",
-        "storage": [
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "0",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "1",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "_owner",
-            "offset": 0,
-            "slot": "51",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "52",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
-          },
-          {
-            "label": "controllers",
-            "offset": 0,
-            "slot": "101",
-            "type": "t_mapping(t_address,t_bool)",
-            "contract": "Controllable",
-            "src": "contracts/Controllable.sol:7"
-          },
-          {
-            "label": "bns",
-            "offset": 0,
-            "slot": "102",
-            "type": "t_contract(BNS)3002",
-            "contract": "ReverseRegistrar",
-            "src": "contracts/ReverseRegistrar.sol:19"
-          },
-          {
-            "label": "defaultResolver",
-            "offset": 0,
-            "slot": "103",
-            "type": "t_contract(NameResolver)4261",
-            "contract": "ReverseRegistrar",
-            "src": "contracts/ReverseRegistrar.sol:20"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_contract(BNS)3002": {
-            "label": "contract BNS",
-            "numberOfBytes": "20"
-          },
-          "t_contract(NameResolver)4261": {
-            "label": "contract NameResolver",
-            "numberOfBytes": "20"
-          },
-          "t_mapping(t_address,t_bool)": {
-            "label": "mapping(address => bool)",
-            "numberOfBytes": "32"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
-    "78a2310129586c2ac569b9f23f78d1f464c9d1f6f4d6d5b5990794e80e180ddb": {
+    "529b1f1d238605a36f3b3d2f7c9fae171df7b172f6cb7882d5bde4c2f45e9554": {
       "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x15e7079192608195f9c9346fc51ca25ab20a26bc971e2c36e97545b943c5710a",
+      "txHash": "0xd770fff7b3d642d95a3771e4a37e4e6576fd050c56ef89107d17ac4abf94b732",
       "layout": {
         "solcVersion": "0.8.16",
         "storage": [
@@ -1673,6 +1561,252 @@
             "numberOfBytes": "32"
           },
           "t_struct(PublicKey)5594_storage": {
+            "label": "struct PubkeyResolver.PublicKey",
+            "members": [
+              {
+                "label": "x",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "y",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "15e7c41df08be34b3b7e5eaad3d6587d3c9c1a04b2cd56215bd7349509c0a154": {
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x97d40f2228863901c726a4b9a3ecc333823ec39af598ae748b78fa7a3c80e1c2",
+      "layout": {
+        "solcVersion": "0.8.16",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "recordVersions",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes32,t_uint64)",
+            "contract": "ResolverBase",
+            "src": "contracts/profiles/ResolverBase.sol:8"
+          },
+          {
+            "label": "versionable_addresses",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_uint64,t_mapping(t_bytes32,t_mapping(t_uint256,t_bytes_storage)))",
+            "contract": "AddrResolver",
+            "src": "contracts/profiles/AddrResolver.sol:15"
+          },
+          {
+            "label": "versionable_abis",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_uint64,t_mapping(t_bytes32,t_mapping(t_uint256,t_bytes_storage)))",
+            "contract": "ABIResolver",
+            "src": "contracts/profiles/ABIResolver.sol:8"
+          },
+          {
+            "label": "versionable_hashes",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint64,t_mapping(t_bytes32,t_bytes_storage))",
+            "contract": "ContentHashResolver",
+            "src": "contracts/profiles/ContentHashResolver.sol:8"
+          },
+          {
+            "label": "versionable_names",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint64,t_mapping(t_bytes32,t_string_storage))",
+            "contract": "NameResolver",
+            "src": "contracts/profiles/NameResolver.sol:9"
+          },
+          {
+            "label": "versionable_pubkeys",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_uint64,t_mapping(t_bytes32,t_struct(PublicKey)5602_storage))",
+            "contract": "PubkeyResolver",
+            "src": "contracts/profiles/PubkeyResolver.sol:13"
+          },
+          {
+            "label": "versionable_texts",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_uint64,t_mapping(t_bytes32,t_mapping(t_string_memory_ptr,t_string_storage)))",
+            "contract": "TextResolver",
+            "src": "contracts/profiles/TextResolver.sol:8"
+          },
+          {
+            "label": "bns",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_contract(BNS)3002",
+            "contract": "PublicResolver",
+            "src": "contracts/PublicResolver.sol:32"
+          },
+          {
+            "label": "nameWrapper",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_contract(INameWrapper)4035",
+            "contract": "PublicResolver",
+            "src": "contracts/PublicResolver.sol:33"
+          },
+          {
+            "label": "trustedETHController",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_address",
+            "contract": "PublicResolver",
+            "src": "contracts/PublicResolver.sol:34"
+          },
+          {
+            "label": "trustedReverseRegistrar",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_address",
+            "contract": "PublicResolver",
+            "src": "contracts/PublicResolver.sol:35"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "PublicResolver",
+            "src": "contracts/PublicResolver.sol:43"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_bytes_storage": {
+            "label": "bytes",
+            "numberOfBytes": "32"
+          },
+          "t_contract(BNS)3002": {
+            "label": "contract BNS",
+            "numberOfBytes": "20"
+          },
+          "t_contract(INameWrapper)4035": {
+            "label": "contract INameWrapper",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_bytes_storage)": {
+            "label": "mapping(bytes32 => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_mapping(t_string_memory_ptr,t_string_storage))": {
+            "label": "mapping(bytes32 => mapping(string => string))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_mapping(t_uint256,t_bytes_storage))": {
+            "label": "mapping(bytes32 => mapping(uint256 => bytes))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_string_storage)": {
+            "label": "mapping(bytes32 => string)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_struct(PublicKey)5602_storage)": {
+            "label": "mapping(bytes32 => struct PubkeyResolver.PublicKey)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint64)": {
+            "label": "mapping(bytes32 => uint64)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_string_memory_ptr,t_string_storage)": {
+            "label": "mapping(string => string)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bytes_storage)": {
+            "label": "mapping(uint256 => bytes)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_mapping(t_bytes32,t_bytes_storage))": {
+            "label": "mapping(uint64 => mapping(bytes32 => bytes))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_mapping(t_bytes32,t_mapping(t_string_memory_ptr,t_string_storage)))": {
+            "label": "mapping(uint64 => mapping(bytes32 => mapping(string => string)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_mapping(t_bytes32,t_mapping(t_uint256,t_bytes_storage)))": {
+            "label": "mapping(uint64 => mapping(bytes32 => mapping(uint256 => bytes)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_mapping(t_bytes32,t_string_storage))": {
+            "label": "mapping(uint64 => mapping(bytes32 => string))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint64,t_mapping(t_bytes32,t_struct(PublicKey)5602_storage))": {
+            "label": "mapping(uint64 => mapping(bytes32 => struct PubkeyResolver.PublicKey))",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(PublicKey)5602_storage": {
             "label": "struct PubkeyResolver.PublicKey",
             "members": [
               {

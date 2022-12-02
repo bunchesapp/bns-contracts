@@ -18,8 +18,12 @@ abstract contract Multicallable is IMulticallable, ERC165 {
                     "multicall: All records must have a matching namehash"
                 );
             }
-            (bool success, bytes memory result) = address(this).call(data[i]);
-            require(success, "mulit call failed");
+            //Believe the following multicall to be safe since address is contrained to `this`
+            /// @custom:oz-upgrades-unsafe-allow delegatecall
+            (bool success, bytes memory result) = address(this).delegatecall(
+                data[i]
+            );
+            require(success, "multi call failed");
             results[i] = result;
         }
         return results;

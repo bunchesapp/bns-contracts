@@ -655,7 +655,7 @@ describe('PublicResolver.sol', async () => {
 
   context('multicall', async () => {
     it('allows setting multiple fields', async () => {
-      const { resolver, node } = await loadFixture(deployPublicResolver);
+      const { resolver, node, owner } = await loadFixture(deployPublicResolver);
       const ABI = [
         'function setName(bytes32, string) external',
         'function setText(bytes32, string, string) external',
@@ -668,7 +668,9 @@ describe('PublicResolver.sol', async () => {
         'https://friends.bunches.xyz',
       ]);
 
-      await resolver.setApprovalForAll(resolver.address, true);
+      //await resolver.setApprovalForAll(resolver.address, true);
+      console.log('owner: ', owner.address);
+      console.log('resolver: ', resolver.address);
 
       await expect(resolver.multicall([nameSet, textSet]))
         .to.emit(resolver, 'NameChanged')
