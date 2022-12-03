@@ -12,7 +12,9 @@ async function main() {
 
   console.log('\n=================Bunches Name Service=================');
   console.log(
-    `\nDeploying contracts to *${network.name} network* \n\nUsing the deployer account:${deployer.address}`,
+    `\nDeploying contracts to *${network.name} network* 
+    \n\nUsing the deployer account: ${deployer.address}
+    \n\nUsing the owner account: ${owner.address}`,
   );
 
   console.log('\n=====================BNS Registry=====================');

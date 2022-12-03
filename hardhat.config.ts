@@ -64,6 +64,10 @@ const config: HardhatUserConfig = {
       url: `https://opt-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
       accounts: real_accounts,
     },
+    'arbitrum-goerli': {
+      url: `https://arb-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
+      accounts: real_accounts,
+    },
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
